@@ -4,6 +4,7 @@ from django.contrib.auth import (authenticate, login, logout,
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
+from django.urls import reverse
 
 from . import models
 from . import forms
@@ -13,7 +14,6 @@ def sign_up(request):
     form = UserCreationForm()
     if request.method == 'POST':
         form = UserCreationForm(data=request.POST)
-
         if form.is_valid():
             form.save()
             user = authenticate(
@@ -39,7 +39,7 @@ def sign_in(request):
                     login(request, user)
                     return HttpResponseRedirect(
                         #reverse('accounts:profile'))
-                        reverse('index')) # fir instance
+                        reverse('index')) # for instance
                 else:
                     messages.error(
                         request, "That user account has been disabled.")
@@ -47,3 +47,9 @@ def sign_in(request):
                 messages.error(
                     request, "Username or password is incorrect.")
     return render(request, 'signin.html', {'form': form})
+
+
+def sign_out(request):
+    logout(request)
+    messages.success(request, "You've been signed out. Come back soon!")
+    return HttpResponseRedirect(reverse('index'))

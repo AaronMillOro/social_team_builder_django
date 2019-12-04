@@ -3,6 +3,16 @@
 
 {% block content %}
   <div class="bounds circle--page">
+    {% if messages %}
+    <div>
+      <ul class="messages centered grid-50">
+        {% for message in messages %}
+          <h2 class="positive">{{ message }}</h2>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
     <div class="circle--article--header">
       <h1> Social Team Builder </h1>
       <p> The app that connects Developers and IT Projects. </p>
