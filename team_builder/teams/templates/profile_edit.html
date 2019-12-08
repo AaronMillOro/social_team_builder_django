@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<div class="bounds circle--page circle--article">
+  <div class="grid-70 centered">
+    <div class="circle--article--body">
+        <h1>User data</h1>
+        <form method="POST" enctype="multipart/form-data" action="">
+            {% csrf_token %}
+            <section>
+              {{ profile_form }}
+            </section>
+            <input type="submit" class="button-primary" value="Save">
+            <!-- <button class="button-primary">Save</button> -->
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

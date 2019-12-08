@@ -58,7 +58,8 @@
                 <li><a href="{% url 'teams:sign_up' %}">Sign Up</a></li>
                 <li><a href="{% url 'teams:sign_in' %}">Sign In</a></li>
               {% else %}
-                <li><a href="{% url 'teams:sign_out' %}">Sign Out</a></li> -->
+              <li><a href="{% url 'teams:profile' %}">Profile</a></li>
+                <li><a href="{% url 'teams:sign_out' %}">Sign Out</a></li>
               {% endif %}
             </ul>
           </nav>

@@ -1,5 +1,7 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 # todo: change to a new model to add from users the different skills
 SKILLS = [
@@ -16,6 +18,7 @@ class Profile(models.Model):
     username = models.OneToOneField(
         User, on_delete=models.CASCADE, unique=True
     )
+    fullname = models.CharField(max_length=200, blank=True)
     bio = models.TextField(max_length=400, blank=True)
     avatar = models.ImageField(upload_to='images/', null=True, blank=True)
     skills = models.CharField(max_length=30, choices=SKILLS, default='')
@@ -53,3 +56,14 @@ class Position(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# Signal used to instanciate a Profile once a User is registered
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(username=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()

@@ -1,6 +1,8 @@
+from django.db import transaction
 from django.contrib import messages
 from django.contrib.auth import (authenticate, login, logout,
                                  update_session_auth_hash)
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
@@ -10,6 +12,7 @@ from . import models
 from . import forms
 
 
+# ---- Sign Up, Sign In and Sign Out logic -------
 def sign_up(request):
     form = UserCreationForm()
     if request.method == 'POST':
@@ -23,8 +26,7 @@ def sign_up(request):
             login(request, user)
             messages.success(request, "You're now a user! ")
             return HttpResponseRedirect(
-                #reverse('accounts:profile'))
-                reverse('index'))
+                reverse('teams:profile_edit'))
     return render(request, 'signup.html', {'form': form})
 
 
@@ -38,8 +40,7 @@ def sign_in(request):
                 if user.is_active:
                     login(request, user)
                     return HttpResponseRedirect(
-                        #reverse('accounts:profile'))
-                        reverse('index')) # for instance
+                        reverse('teams:profile'))
                 else:
                     messages.error(
                         request, "That user account has been disabled.")
@@ -53,3 +54,25 @@ def sign_out(request):
     logout(request)
     messages.success(request, "You've been signed out. Come back soon!")
     return HttpResponseRedirect(reverse('index'))
+
+
+# ---- Profile logic -------
+@login_required
+def profile(request):
+    return render(request, 'profile.html')
+
+
+@login_required
+@transaction.atomic
+def profile_edit(request):
+    if request.method == 'POST':
+        profile_form = forms.ProfileForm(
+            request.POST, request.FILES, instance=request.user.profile)
+        if profile_form.is_valid():
+            profile_form.save()
+            messages.success(request, 'Profile successfully updated!')
+            return redirect('teams:profile')
+    else:
+        profile_form = forms.ProfileForm(instance=request.user.profile)
+    return render(request, 'profile_edit.html',
+        {'profile_form': profile_form})
