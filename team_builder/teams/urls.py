@@ -1,5 +1,7 @@
-from django.conf.urls import url
 #from django.urls import path
+from django.conf import settings
+from django.conf.urls import url
+from django.contrib.staticfiles.urls import static
 
 from . import views
 
@@ -13,3 +15,5 @@ urlpatterns = [
     url(r'^profile/$', views.profile, name='profile'),
     url(r'^profile_edit/$', views.profile_edit, name='profile_edit'),
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

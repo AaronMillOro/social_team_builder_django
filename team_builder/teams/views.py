@@ -59,7 +59,11 @@ def sign_out(request):
 # ---- Profile logic -------
 @login_required
 def profile(request):
-    return render(request, 'profile.html')
+    if request.method == 'GET':
+        #applications = request.applications
+        #positions = request.positions
+        profile = request.user.profile
+    return render(request, 'profile.html', {'profile': profile})
 
 
 @login_required

@@ -58,7 +58,6 @@
                 <li><h1><a href="{% url 'teams:sign_up' %}">Sign Up</a></h1></li>
                 <li><h1><a href="{% url 'teams:sign_in' %}">Sign In</a></h1></li>
               {% else %}
-                <li><a href="{% url 'teams:profile' %}">Profile</a></li>
                 <li><h1><a href="{% url 'teams:sign_out' %}">Sign Out</a></h1></li>
               {% endif %}
             </ul>
@@ -67,6 +66,17 @@
       </div>
     </div>
   </header>
+
+  {% if user.is_authenticated %}
+    <div class="circle--actions--bar">
+      <nav class="bounds">
+        <ul class="circle--pill--list">
+          <li><a class="selected" href="{% url 'teams:profile' %}">Profile</a></li>
+          <li><a href="applications.html">Applications</a></li> <!-- TODO -->
+        </ul>
+      </nav>
+    </div>
+  {% endif %}
 
   {% block content %} {% endblock %}
 
