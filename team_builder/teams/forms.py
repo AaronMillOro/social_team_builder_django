@@ -11,12 +11,12 @@ class ProfileForm(forms.ModelForm):
     class Meta:
         model = models.Profile
         fields = (
-            'fullname', 'bio', 'avatar', 'skills',
+            'fullname', 'bio', 'avatar',
         )
         labels = {
             'fullname': 'Provide your entire name',
             'bio': 'Short biography',
-            'Skills': 'Provide your dev skills',
+            'skills': 'Provide your dev skills',
         }
 
     def clean_bio(self):
@@ -26,3 +26,10 @@ class ProfileForm(forms.ModelForm):
             raise forms.ValidationError(
                 'The biography must have at least 10 characters')
         return bio
+
+class SkillsForm(forms.ModelForm):
+
+    class Meta:
+        model = models.Profile
+        fields = ('skills',)
+        labels = {'skills': 'Provide your dev skills'}

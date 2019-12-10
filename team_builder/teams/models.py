@@ -14,6 +14,13 @@ SKILLS = [
 ]
 
 
+class Skill(models.Model):
+    skill_name = models.CharField(max_length=400, blank=True)
+
+    def __str__(self):
+        return self.skill_name
+
+
 class Profile(models.Model):
     username = models.OneToOneField(
         User, on_delete=models.CASCADE, unique=True
@@ -21,7 +28,8 @@ class Profile(models.Model):
     fullname = models.CharField(max_length=200, blank=True)
     bio = models.TextField(max_length=400, blank=True)
     avatar = models.ImageField(upload_to='images/', null=True, blank=True)
-    skills = models.CharField(max_length=30, choices=SKILLS, default='')
+    #skills = models.CharField(max_length=500, default='')
+    skills = models.CharField(max_length=1000, default='')
     current_projects = models.CharField(max_length=20, default='')
     old_projects = models.CharField(max_length=20, default='')
 
@@ -58,12 +66,13 @@ class Position(models.Model):
         return self.name
 
 
-# Signal used to instanciate a Profile once a User is registered
+# Signal to create a Profile once a User is registered
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(username=instance)
 
-@receiver(post_save, sender=User)
-def save_user_profile(sender, instance, **kwargs):
+
+@receiver(post_save, sender=Skill)
+def save_skill_profile(sender, instance, **kwargs):
     instance.profile.save()

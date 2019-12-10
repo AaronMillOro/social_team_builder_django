@@ -2,15 +2,25 @@
 
 {% block content %}
 <div class="bounds circle--page circle--article">
+
   <form method="POST" enctype="multipart/form-data" action="">
     {% csrf_token %}
-    <div class="grid-70">
+    <div class="grid-60">
       <h1>User data</h1>
         <div class="circle--article--body">
           {{ profile_form.as_p }}
         </div>
-      <input type="submit" class="button-primary" value="Save">
     </div>
+
+    <div class="grid-25 grid-push-5">
+      <div class="circle--secondary--module">
+        <h3>My skills</h3>
+            {{ skills_form.as_table }}
+      </div>
+    </div>
+
+  <input type="submit" class="button-primary" value="SAVE CHANGES">
   </form>
+
 </div>
 {% endblock %}

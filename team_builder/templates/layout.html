@@ -78,6 +78,16 @@
     </div>
   {% endif %}
 
+  {% if messages %}
+  <div>
+    <ul class="messages centered grid-50">
+      {% for message in messages %}
+        <h2 class="positive">{{ message }}</h2>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
   {% block content %} {% endblock %}
 
 </body>

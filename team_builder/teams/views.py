@@ -72,11 +72,17 @@ def profile_edit(request):
     if request.method == 'POST':
         profile_form = forms.ProfileForm(
             request.POST, request.FILES, instance=request.user.profile)
-        if profile_form.is_valid():
+        skills_form = forms.SkillsForm(
+            request.POST, instance=request.user.profile)
+        if profile_form.is_valid() and skills_form.is_valid():
             profile_form.save()
+            skills_form.save()
             messages.success(request, 'Profile successfully updated!')
             return redirect('teams:profile')
     else:
         profile_form = forms.ProfileForm(instance=request.user.profile)
-    return render(request, 'profile_edit.html',
-        {'profile_form': profile_form})
+        skills_form = forms.SkillsForm(instance=request.user.profile)
+    return render(
+        request, 'profile_edit.html',
+        {'profile_form': profile_form, 'skills_form': skills_form}
+    )
