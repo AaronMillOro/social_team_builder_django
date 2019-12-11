@@ -5,6 +5,15 @@ import re
 
 from . import models
 
+SKILLS = [
+    ('HTML/CSS', 'HTML/CSS'),
+    ('Wordpress', 'Wordpress'),
+    ('JavaScript', 'JavaScript'),
+    ('Ruby', 'Ruby'),
+    ('Django', 'Django'),
+    ('GOlang', 'GOlang')
+]
+
 
 class ProfileForm(forms.ModelForm):
 
@@ -14,9 +23,9 @@ class ProfileForm(forms.ModelForm):
             'fullname', 'bio', 'avatar',
         )
         labels = {
-            'fullname': 'Provide your entire name',
-            'bio': 'Short biography',
-            'skills': 'Provide your dev skills',
+            'fullname': 'ENTER NAME',
+            'bio': 'SHORT BIOGRAPHY',
+            'avatar': 'UPLOAD PROFILE PICTURE',
         }
 
     def clean_bio(self):
@@ -24,12 +33,15 @@ class ProfileForm(forms.ModelForm):
         bio = self.cleaned_data['bio']
         if len(bio) < 10:
             raise forms.ValidationError(
-                'The biography must have at least 10 characters')
+                'BIOGRAPHY FIELD MUST HAVE AT LEAST 10 CHARACTERS')
         return bio
 
 class SkillsForm(forms.ModelForm):
+    skills = forms.MultipleChoiceField(
+        widget=forms.CheckboxSelectMultiple, choices=SKILLS,
+    )
 
     class Meta:
         model = models.Profile
         fields = ('skills',)
-        labels = {'skills': 'Provide your dev skills'}
+        labels = {'skills': 'PROVIDE DEV SKILLS',}

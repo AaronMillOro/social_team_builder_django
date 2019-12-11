@@ -26,12 +26,11 @@
     </div>
 
     <div class="circle--secondary--module">
-      <h4>My Skills</h4>
+      <h2>My Skills</h2>
         <ul class="unloaded">
-          {% for skill in profile.skills %}
-            <li>{{ skill }}</li>
-          {% endfor %}
-            <li>TODO CONVERT # to LETTER</li>
+            {% for skill in profile.skills_as_list %}
+            <li><h4>{{ skill }}</h4></li>
+            {% endfor %}
         </ul>
     </div>
   </div>

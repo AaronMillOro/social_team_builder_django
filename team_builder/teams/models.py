@@ -3,16 +3,6 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
-# todo: change to a new model to add from users the different skills
-SKILLS = [
-    ('1', 'HTML/CSS'),
-    ('2', 'Wordpress'),
-    ('3', 'JavaScript'),
-    ('4', 'Ruby'),
-    ('5', 'Django'),
-    ('6', 'GOlang')
-]
-
 
 class Skill(models.Model):
     skill_name = models.CharField(max_length=400, blank=True)
@@ -28,13 +18,17 @@ class Profile(models.Model):
     fullname = models.CharField(max_length=200, blank=True)
     bio = models.TextField(max_length=400, blank=True)
     avatar = models.ImageField(upload_to='images/', null=True, blank=True)
-    #skills = models.CharField(max_length=500, default='')
     skills = models.CharField(max_length=1000, default='')
     current_projects = models.CharField(max_length=20, default='')
     old_projects = models.CharField(max_length=20, default='')
 
     def __str__(self):
         return self.username
+
+    def skills_as_list(self):
+        skills = self.skills
+        skills = skills.replace("[", "").replace("]", "").replace("'", "")
+        return skills.split(",")
 
 
 class Project(models.Model):
@@ -72,7 +66,6 @@ def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(username=instance)
 
-
-@receiver(post_save, sender=Skill)
-def save_skill_profile(sender, instance, **kwargs):
-    instance.profile.save()
+#@receiver(post_save, sender=Skill)
+#def save_skill_profile(sender, instance, **kwargs):
+#    instance.profile.save()
