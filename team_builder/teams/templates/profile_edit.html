@@ -7,15 +7,15 @@
     {% csrf_token %}
     <div class="grid-60">
       <h1>User data</h1>
-        <div class="circle--article--body">
-          {{ profile_form.as_p }}
-        </div>
+      <div class="circle--article--body">
+        {{ profile_form.as_p }}
+      </div>
     </div>
 
     <div class="grid-25 grid-push-5">
       <div class="circle--secondary--module">
-        <h2>SELECT DEV SKILLS</h2>
-            {{ skills_form.as_p }}
+        <h4>SELECT DEV SKILLS</h4>
+        <h6>{{ skills_form.as_p }}</h6>
       </div>
     </div>
 

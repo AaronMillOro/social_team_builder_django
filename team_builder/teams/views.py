@@ -86,3 +86,12 @@ def profile_edit(request):
         request, 'profile_edit.html',
         {'profile_form': profile_form, 'skills_form': skills_form}
     )
+
+
+# ---- Projects logic ----
+def projects(request):
+    if request.method == 'GET':
+        #applications = request.applications
+        #positions = request.positions
+        projects = models.Project.objects.all()
+    return render(request, 'projects.html', {'projects': projects})

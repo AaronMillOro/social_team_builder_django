@@ -65,7 +65,3 @@ class Position(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(username=instance)
-
-#@receiver(post_save, sender=Skill)
-#def save_skill_profile(sender, instance, **kwargs):
-#    instance.profile.save()

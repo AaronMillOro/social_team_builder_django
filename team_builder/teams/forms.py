@@ -11,7 +11,10 @@ SKILLS = [
     ('JavaScript', 'JavaScript'),
     ('Ruby', 'Ruby'),
     ('Django', 'Django'),
-    ('GOlang', 'GOlang')
+    ('GOlang', 'GOlang'),
+    ('Android', 'Android'),
+    ('R', 'R'),
+    ('Python', 'Python'),
 ]
 
 
@@ -36,12 +39,13 @@ class ProfileForm(forms.ModelForm):
                 'BIOGRAPHY FIELD MUST HAVE AT LEAST 10 CHARACTERS')
         return bio
 
+
 class SkillsForm(forms.ModelForm):
     skills = forms.MultipleChoiceField(
-        widget=forms.CheckboxSelectMultiple, choices=SKILLS,
+        choices=SKILLS,
+        widget=forms.CheckboxSelectMultiple, 
     )
 
     class Meta:
         model = models.Profile
         fields = ('skills',)
-        labels = {'skills': 'PROVIDE DEV SKILLS',}

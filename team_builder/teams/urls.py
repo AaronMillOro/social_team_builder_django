@@ -14,6 +14,8 @@ urlpatterns = [
     url(r'^sign_out/$', views.sign_out, name='sign_out'),
     url(r'^profile/$', views.profile, name='profile'),
     url(r'^profile_edit/$', views.profile_edit, name='profile_edit'),
+    url(r'^projects/$', views.projects, name='projects'),
+    
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
