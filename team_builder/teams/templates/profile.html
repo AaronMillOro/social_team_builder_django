@@ -4,22 +4,24 @@
 {% block content %}
 <div class="bounds circle--page">
   <div class="grid-70">
-    <h1>{{ profile.fullname }}</h1>
+    <h2>{{ profile.fullname }}</h2>
 
     <!-- Edit button -->
     <div class="circle--page--header circle--fluid">
       <div class="circle--fluid--cell circle--fluid--secondary">
-        <a class="button icon-on-left" href="{% url 'teams:profile_edit' %}">EDIT</a>
+        <a class="button icon-on-left" href="{% url 'teams:profile_edit' %}">EDIT PROFILE</a>
       </div>
     </div>
     <!-- User information -->
-    <div class="circle--article--body"><p>{{ profile.bio }}</p></div>
+    <div class="circle--article--body">
+      <p>{{ profile.bio }}</p>
+    </div>
   </div>
 
   <div class="grid-25 grid-push-5">
     <div class="circle--secondary--module">
       {% if profile.avatar != '' %}
-        <img  src="{{ profile.avatar.url }}" width="150" height="160">
+        <img  src="{{ profile.avatar.url }}" width="150" height="180">
       {% else %}
         <p>Upload profile pic</p>
       {% endif %}

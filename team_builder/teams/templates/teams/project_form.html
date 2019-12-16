@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% load static from staticfiles %}
+
+{% block content %}
+<div class="bounds circle--page">
+  <form method="POST" enctype="multipart/form-data" action="">
+
+    <div class="grid-100">
+      <input type="submit" class="button button-primary" href="{% url 'teams:profile' %}" value="SAVE PROJECT"> 
+      <a class="button button-text" href="{% url 'teams:projects' %}">DISCARD</a>  <!-- todo -->
+    </div>
+
+    {% csrf_token %}
+    <div class="grid-75">
+      <h1>Create new project</h1>
+      <div class="circle--article--body">
+        {{ form.as_table }}
+      </div>
+    </div>
+
+    <div class="grid-25 grid-push-5">
+      <div class="circle--secondary--module">
+        <h4>SELECT DEV SKILLS</h4>
+        <h6>HOLA</h6>
+      </div>
+    </div>
+
+  </form>
+
+
+
+
+</div>
+
+{% endblock %}

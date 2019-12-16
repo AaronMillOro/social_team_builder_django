@@ -7,6 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from . import models
 from . import forms
@@ -84,14 +85,29 @@ def profile_edit(request):
         skills_form = forms.SkillsForm(instance=request.user.profile)
     return render(
         request, 'profile_edit.html',
-        {'profile_form': profile_form, 'skills_form': skills_form}
+        {'profile_form': profile_form, 'skills_form': skills_form,
+        }
     )
 
 
-# ---- Projects logic ----
+# ---- Projects logic: CREATE, READ(listing of all), UPDATE, DELETE ----
 def projects(request):
     if request.method == 'GET':
         #applications = request.applications
         #positions = request.positions
         projects = models.Project.objects.all()
     return render(request, 'projects.html', {'projects': projects})
+
+
+class ProjectCreateView(CreateView):
+    fields = ('title', 'timeline', 'requirements')
+    model = models.Project
+
+
+# ---- Applications logic ----
+def applications(request):
+    if request.method == 'GET':
+        #applications = request.applications
+        #positions = request.positions
+        applications = models.Project.objects.all()
+    return render(request, 'applications.html', {'applications': applications})
