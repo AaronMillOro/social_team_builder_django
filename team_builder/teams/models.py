@@ -5,10 +5,22 @@ from django.dispatch import receiver
 
 
 class Skill(models.Model):
-    skill_name = models.CharField(max_length=400, blank=True)
+    """ Skills can be by the User from the profile_edit view """
+    skill_name = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
         return self.skill_name
+
+
+class ProfileSkills(models.Model):
+    username = models.ForeignKey('Profile', on_delete=models.CASCADE)
+    skills = models.ManyToManyField('Skill')
+
+
+#    def skills_as_list(self):
+#        skills = self.skills
+#        skills = skills.replace("[", "").replace("]", "").replace("'", "")
+#        return skills.split(",")
 
 
 class Profile(models.Model):

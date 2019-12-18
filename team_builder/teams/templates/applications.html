@@ -8,43 +8,26 @@
     <h2>Applications</h2>
   </div>
 
-  <div class="circle--fluid--cell circle--fluid--secondary">
-    <a class="button button-primary icon-on-left" href="project_new.html">
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 13 13" style="enable-background:new 0 0 13 13;" xml:space="preserve" class="add">
-        <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "/>
-      </svg>
-      New Project
-    </a>
+  <!-- Table with projects and positions -->
+  <div class="grid-75 grid-push-5">
+    <table class="circle--table u-full-width">
+      <thead>
+        <tr>
+          <th>Candidate</th>
+          <th class="circle--cell--right align-center">Project</th>
+          <th class="circle--cell--right align-right">Status</th>
+        </tr>
+      </thead>
+    <tbody>
+      <tr class="clickable-row" data-href="project.html">
+        <td><h3>Invoice Delivery Tool</h3></td>
+        <td class="circle--cell--right align-center">
+          <span class="secondary-label">Rails Developer</span>
+        </td>
+        <td class="circle--cell--right align-right">Check status<td>
+      </tr>
+    </tbody>
+    </table>
   </div>
-
-    <!-- Table with projects and positions -->
-    <div class="grid-75 grid-push-5">
-
-      <table class="circle--table u-full-width">
-        <thead>
-          <tr>
-            <th>Candidate</th>
-            <th class="circle--cell--right align-right">Project</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr class="clickable-row" data-href="project.html">
-            <td><h3>Invoice Delivery Tool</h3></td>
-            <td class="circle--cell--right align-right">
-              <span class="secondary-label">Rails Developer</span>
-            </td>
-          </tr>
-
-        </tbody>
-
-      </table>
-
-  </div>
-
-
-
-
-  </div>
-
+</div>
 {% endblock %}

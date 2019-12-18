@@ -73,19 +73,25 @@ def profile_edit(request):
     if request.method == 'POST':
         profile_form = forms.ProfileForm(
             request.POST, request.FILES, instance=request.user.profile)
-        skills_form = forms.SkillsForm(
-            request.POST, instance=request.user.profile)
+        skills_form = forms.SkillsForm(request.POST)
+        new_skill_form = forms.NewSkillForm(request.POST)
         if profile_form.is_valid() and skills_form.is_valid():
             profile_form.save()
             skills_form.save()
             messages.success(request, 'Profile successfully updated!')
-            return redirect('teams:profile')
+            return redirect('teams:profile', username_id=models.ProfileSkills.username_id)
+        elif new_skill_form.is_valid:
+            new_skill_form.save()
+            messages.success(request, 'New skill added')
+            return redirect('teams:profile_edit')
     else:
         profile_form = forms.ProfileForm(instance=request.user.profile)
-        skills_form = forms.SkillsForm(instance=request.user.profile)
+        skills_form = forms.SkillsForm()
+        new_skill_form = forms.NewSkillForm()
     return render(
         request, 'profile_edit.html',
         {'profile_form': profile_form, 'skills_form': skills_form,
+         'new_skill_form': new_skill_form,
         }
     )
 

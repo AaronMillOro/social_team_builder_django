@@ -3,23 +3,34 @@
 {% block content %}
 <div class="bounds circle--page circle--article">
 
+<!-- FORM OF PERSONAL INFORÑATION -->
+
   <form method="POST" enctype="multipart/form-data" action="">
     {% csrf_token %}
     <div class="grid-60">
+      <input type="submit" class="button-primary" value="SAVE CHANGES">
       <h1>User data</h1>
       <div class="circle--article--body">
         {{ profile_form.as_p }}
       </div>
     </div>
-
     <div class="grid-25 grid-push-5">
-      <div>
-        <h4>SELECT DEV SKILLS</h4>
-        <h6>{{ skills_form }}</h6>
-      </div>
+      <h4>SELECT DEV SKILLS</h4>
+      <h6>{{ skills_form.as_p }}</h6>
     </div>
+  </form>
 
-  <input type="submit" class="button-primary" value="SAVE CHANGES">
+<!-- FORM TO ADD EXTRA SKILLS TO THE DATABASE -->
+  <div class="grid-25 grid-push-5">
+    <form method="POST" action="">
+      {% csrf_token %}
+      <a type="text"><h5>{{ new_skill_form.as_p }}</h5></a>
+      <input type="submit" class="button-secondary" value="ADD SKILL">
+  </div>
+
+  <div class="grid-60">
+    <p></p>
+  </div>
   </form>
 
 </div>

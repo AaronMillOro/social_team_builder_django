@@ -36,16 +36,30 @@ class ProfileForm(forms.ModelForm):
         bio = self.cleaned_data['bio']
         if len(bio) < 10:
             raise forms.ValidationError(
-                'BIOGRAPHY FIELD MUST HAVE AT LEAST 10 CHARACTERS')
+                'BIOGRAPHY MUST HAVE AT LEAST 10 CHARACTERS')
         return bio
 
 
 class SkillsForm(forms.ModelForm):
     skills = forms.MultipleChoiceField(
-        choices=SKILLS,
-        widget=forms.CheckboxSelectMultiple, 
+        choices=models.Skill.objects.all().values_list(),
+        #choices=SKILLS,
+        widget=forms.CheckboxSelectMultiple,
+        label=''
     )
 
     class Meta:
-        model = models.Profile
+        model = models.ProfileSkills
         fields = ('skills',)
+
+
+class NewSkillForm(forms.ModelForm):
+    skill_name = forms.CharField(
+        max_length=20,
+        widget=forms.TextInput(attrs={'placeholder': 'Other skill ?'}),
+        label='',
+    )
+
+    class Meta:
+        model = models.Skill
+        fields = ('skill_name',)
