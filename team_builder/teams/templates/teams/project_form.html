@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
-{% load static from staticfiles %}
+{% load static %}
 
 {% block content %}
 <div class="bounds circle--page">
   <form method="POST" enctype="multipart/form-data" action="">
 
     <div class="grid-100">
-      <input type="submit" class="button button-primary" href="{% url 'teams:profile' %}" value="SAVE PROJECT"> 
+      <input type="submit" class="button button-primary" href="{% url 'teams:profile' %}" value="SAVE PROJECT">
       <a class="button button-text" href="{% url 'teams:projects' %}">DISCARD</a>  <!-- todo -->
     </div>
 
