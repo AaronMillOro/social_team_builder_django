@@ -4,22 +4,26 @@
 {% block content %}
 <div class="bounds circle--page">
 
+<!-- RETURN BUTTON -->
+  <div class="grid-15">
+    <a class="button" href="{% url 'teams:profile_edit' %}">
+      Go back
+    </a>
+  </div>
+
 <!-- Table listing the available skills inside the database -->
-  <div class="grid-30">
+  <div class="grid-25">
+    <p> </p>
     <table class="circle--table u-full-width">
       <thead>
         <tr>
-          <th>
-            <h2>Skills</h2>
-          </th>
+          <th> <h2>Skills</h2> </th>
         </tr>
       </thead>
       <tbody>
         {% for skill in skills %}
         <tr>
-          <td>
-            <h5> > {{ skill }}</h5>
-          </td>
+          <td> <h5> * {{ skill }}</h5> </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -33,9 +37,10 @@
       {{ new_skill_form.as_p }}
     </div>
 
-    <div class="grid-30">
+    <div class="grid-15">
       <input type="submit" class="button-primary" value="ADD SKILL">
     </div>
   </form>
+
 </div>
 {% endblock %}

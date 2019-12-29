@@ -64,9 +64,7 @@ def profile(request):
         #applications = request.applications
         #positions = request.positions
         profile = request.user.profile
-        profileskills = request.user.profile.skills
 
-        print(profileskills)
     return render(request, 'profile.html', {'profile': profile})
 
 
@@ -102,7 +100,7 @@ def add_skills(request):
         if new_skill_form.is_valid:
             new_skill_form.save()
             messages.success(request, 'New skill added to database!')
-            return redirect('teams:profile_edit')
+            return redirect('teams:add_skills')
     else:
         skills = models.Skill.objects.all()
         skills = skills.extra(order_by = ['skill_name'])
