@@ -64,6 +64,9 @@ def profile(request):
         #applications = request.applications
         #positions = request.positions
         profile = request.user.profile
+        profileskills = request.user.profile.skills
+
+        print(profileskills)
     return render(request, 'profile.html', {'profile': profile})
 
 
@@ -72,27 +75,40 @@ def profile(request):
 def profile_edit(request):
     if request.method == 'POST':
         profile_form = forms.ProfileForm(
-            request.POST, request.FILES, instance=request.user.profile)
-        skills_form = forms.SkillsForm(request.POST)
-        new_skill_form = forms.NewSkillForm(request.POST)
-        if profile_form.is_valid() and skills_form.is_valid():
+            request.POST, request.FILES, instance=request.user.profile
+        )
+        skills_form = forms.SkillsForm(
+            request.POST, instance=request.user.profile
+        )
+        if profile_form.is_valid() or skills_form.is_valid():
             profile_form.save()
             skills_form.save()
             messages.success(request, 'Profile successfully updated!')
-            return redirect('teams:profile', username_id=models.ProfileSkills.username_id)
-        elif new_skill_form.is_valid:
-            new_skill_form.save()
-            messages.success(request, 'New skill added')
-            return redirect('teams:profile_edit')
+            return redirect('teams:profile', )
     else:
         profile_form = forms.ProfileForm(instance=request.user.profile)
         skills_form = forms.SkillsForm()
-        new_skill_form = forms.NewSkillForm()
     return render(
-        request, 'profile_edit.html',
-        {'profile_form': profile_form, 'skills_form': skills_form,
-         'new_skill_form': new_skill_form,
-        }
+        request, 'profile_edit.html', {
+            'profile_form': profile_form, 'skills_form': skills_form,}
+    )
+
+
+@login_required
+def add_skills(request):
+    """ View to render skills from database and to add a new skill """
+    if request.method == 'POST':
+        new_skill_form = forms.NewSkillForm(request.POST)
+        if new_skill_form.is_valid:
+            new_skill_form.save()
+            messages.success(request, 'New skill added to database!')
+            return redirect('teams:profile_edit')
+    else:
+        skills = models.Skill.objects.all()
+        skills = skills.extra(order_by = ['skill_name'])
+        new_skill_form = forms.NewSkillForm()
+    return render(request, 'add_skills.html', {
+        'skills': skills, 'new_skill_form': new_skill_form,}
     )
 
 

@@ -49,15 +49,15 @@ class SkillsForm(forms.ModelForm):
     )
 
     class Meta:
-        model = models.ProfileSkills
+        model = models.Profile
         fields = ('skills',)
 
 
 class NewSkillForm(forms.ModelForm):
-    skill_name = forms.CharField(
-        max_length=20,
-        widget=forms.TextInput(attrs={'placeholder': 'Other skill ?'}),
-        label='',
+    skill_name = forms.CharField(max_length=20, label='',
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Another skill not cited on the list?'}
+        )
     )
 
     class Meta:

@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block content %}
+<div class="bounds circle--page">
+
+<!-- Table listing the available skills inside the database -->
+  <div class="grid-30">
+    <table class="circle--table u-full-width">
+      <thead>
+        <tr>
+          <th>
+            <h2>Skills</h2>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for skill in skills %}
+        <tr>
+          <td>
+            <h5> > {{ skill }}</h5>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Form to add a new skill -->
+  <form method="POST" action="">
+    <div class="grid-30">
+      {% csrf_token %}
+      {{ new_skill_form.as_p }}
+    </div>
+
+    <div class="grid-30">
+      <input type="submit" class="button-primary" value="ADD SKILL">
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -15,11 +15,13 @@ urlpatterns = [
 
     url(r'^profile/$', views.profile, name='profile'),
     url(r'^profile_edit/$', views.profile_edit, name='profile_edit'),
+    url(r'^add_skill/$', views.add_skills, name='add_skills'),
 
     url(r'^projects/$', views.projects, name='projects'),
     url(r'^projects_create/$',
         views.ProjectCreateView.as_view(), name='project_create'
     ),
+
     url(r'^applications/$', views.applications, name='applications'),
 
 ]

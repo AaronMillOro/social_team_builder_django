@@ -12,10 +12,24 @@ class Skill(models.Model):
         return self.skill_name
 
 
-class ProfileSkills(models.Model):
-    username = models.ForeignKey('Profile', on_delete=models.CASCADE)
-    skills = models.ManyToManyField('Skill')
+class Profile(models.Model):
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, unique=True
+    )
+    fullname = models.CharField(max_length=200, blank=True)
+    bio = models.TextField(max_length=400, blank=True)
+    avatar = models.ImageField(upload_to='images/', null=True, blank=True)
+    skills = models.ManyToManyField('Skill', blank=True)
+    current_projects = models.CharField(max_length=20, default='')
+    old_projects = models.CharField(max_length=20, default='')
 
+    def __str__(self):
+        return self.username
+
+    def skill_detail(request):
+        profile = Profile.objects.get(pk=user_pk)
+        skills = profile.skills.all()
+        return skills
 
 #    def skills_as_list(self):
 #        skills = self.skills
@@ -23,28 +37,8 @@ class ProfileSkills(models.Model):
 #        return skills.split(",")
 
 
-class Profile(models.Model):
-    username = models.OneToOneField(
-        User, on_delete=models.CASCADE, unique=True
-    )
-    fullname = models.CharField(max_length=200, blank=True)
-    bio = models.TextField(max_length=400, blank=True)
-    avatar = models.ImageField(upload_to='images/', null=True, blank=True)
-    skills = models.CharField(max_length=1000, default='')
-    current_projects = models.CharField(max_length=20, default='')
-    old_projects = models.CharField(max_length=20, default='')
-
-    def __str__(self):
-        return self.username
-
-    def skills_as_list(self):
-        skills = self.skills
-        skills = skills.replace("[", "").replace("]", "").replace("'", "")
-        return skills.split(",")
-
-
 class Project(models.Model):
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150, unique=True, null=False)
     timeline = models.CharField(max_length=25, null=False)
     requirements = models.CharField(max_length=255, null=False)

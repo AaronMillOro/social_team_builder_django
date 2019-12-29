@@ -3,34 +3,44 @@
 {% block content %}
 <div class="bounds circle--page circle--article">
 
-<!-- FORM OF PERSONAL INFORÑATION -->
-
+<!-- PERSONAL INFORMATION FORM -->
   <form method="POST" enctype="multipart/form-data" action="">
     {% csrf_token %}
     <div class="grid-60">
-      <input type="submit" class="button-primary" value="SAVE CHANGES">
       <h1>User data</h1>
       <div class="circle--article--body">
         {{ profile_form.as_p }}
       </div>
     </div>
+
+<!-- SKILLS FORM -->
     <div class="grid-25 grid-push-5">
       <h4>SELECT DEV SKILLS</h4>
       <h6>{{ skills_form.as_p }}</h6>
     </div>
-  </form>
 
-<!-- FORM TO ADD EXTRA SKILLS TO THE DATABASE -->
-  <div class="grid-25 grid-push-5">
-    <form method="POST" action="">
-      {% csrf_token %}
-      <a type="text"><h5>{{ new_skill_form.as_p }}</h5></a>
-      <input type="submit" class="button-secondary" value="ADD SKILL">
-  </div>
+<!-- ADD NEW SKILL TO DB -->
+    <div class="grid-25 grid-push-5">
+      <div class="circle--fluid--cell circle--fluid--secondary">
+        <a class="button icon-on-left" href="{% url 'teams:add_skills' %}"}>
+          <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 13 13" style="enable-background:new 0 0 13 13;" xml:space="preserve" class="add">
+            <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "/>
+          </svg>
+          Add new skill
+        </a>
+      </div>
+    </div>
 
-  <div class="grid-60">
-    <p></p>
-  </div>
+<!-- AESTHETICS -->
+    <div class="grid-60">
+      <p> </p>
+    </div>
+    <div class="grid-60">
+      <input type="submit" class="button-primary" value="SAVE CHANGES">
+    </div>
+    <div class="grid-25 grid-push-5">
+      <p></p>
+    </div>
   </form>
 
 </div>
