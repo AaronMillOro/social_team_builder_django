@@ -30,9 +30,9 @@
     <div class="circle--secondary--module">
       <h2>My Skills</h2>
         <ul class="unloaded">
-<!--            {% for skill in profile.skills_as_list %} -->
-            <li><h4>{{ profileskills.skill_detail }}</h4></li>
-<!--            {% endfor %} -->
+            {% for skill in profile.skills.all|dictsort:"skill_name" %}
+            <li><h4>* {{ skill }}</h4></li>
+            {% endfor %}
         </ul>
     </div>
   </div>

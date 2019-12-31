@@ -5,18 +5,6 @@ import re
 
 from . import models
 
-SKILLS = [
-    ('HTML/CSS', 'HTML/CSS'),
-    ('Wordpress', 'Wordpress'),
-    ('JavaScript', 'JavaScript'),
-    ('Ruby', 'Ruby'),
-    ('Django', 'Django'),
-    ('GOlang', 'GOlang'),
-    ('Android', 'Android'),
-    ('R', 'R'),
-    ('Python', 'Python'),
-]
-
 
 class ProfileForm(forms.ModelForm):
 
@@ -41,12 +29,17 @@ class ProfileForm(forms.ModelForm):
 
 
 class SkillsForm(forms.ModelForm):
-    skills = forms.MultipleChoiceField(
-        choices=models.Skill.objects.all().values_list(),
-        #choices=SKILLS,
-        widget=forms.CheckboxSelectMultiple,
-        label=''
+    skills = forms.ModelMultipleChoiceField(
+        queryset=models.Skill.objects.all(), required=False,
+        widget=forms.CheckboxSelectMultiple, label='',
     )
+    #skills = forms.MultipleChoiceField(
+    #skills = forms.ModelChoiceField(
+        #queryset=models.Skill.objects.values_list('skill_name',flat=True).distinct(),
+    #    choices=models.Skill.objects.all().values_list(),
+    #    widget=forms.CheckboxSelectMultiple,
+    #
+    #)
 
     class Meta:
         model = models.Profile

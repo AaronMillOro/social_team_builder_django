@@ -64,7 +64,6 @@ def profile(request):
         #applications = request.applications
         #positions = request.positions
         profile = request.user.profile
-
     return render(request, 'profile.html', {'profile': profile})
 
 
@@ -82,10 +81,10 @@ def profile_edit(request):
             profile_form.save()
             skills_form.save()
             messages.success(request, 'Profile successfully updated!')
-            return redirect('teams:profile', )
+            return redirect('teams:profile')
     else:
         profile_form = forms.ProfileForm(instance=request.user.profile)
-        skills_form = forms.SkillsForm()
+        skills_form = forms.SkillsForm(instance=request.user.profile)
     return render(
         request, 'profile_edit.html', {
             'profile_form': profile_form, 'skills_form': skills_form,}
@@ -130,4 +129,6 @@ def applications(request):
         #applications = request.applications
         #positions = request.positions
         applications = models.Project.objects.all()
-    return render(request, 'applications.html', {'applications': applications})
+    return render(
+        request, 'applications.html', {'applications': applications}
+    )
