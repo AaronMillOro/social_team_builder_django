@@ -5,7 +5,6 @@ from django.dispatch import receiver
 
 
 class Skill(models.Model):
-    """ Skills can be by the User from the profile_edit view """
     skill_name = models.CharField(max_length=20, blank=True)
 
     def __str__(self):
@@ -26,35 +25,18 @@ class Profile(models.Model):
     def __str__(self):
         return self.username
 
-    def skill_detail(request):
-        profile = Profile.objects.get(pk=user_pk)
-        skills = profile.skills.all()
-        return skills
-
-#    def skills_as_list(self):
-#        skills = self.skills
-#        skills = skills.replace("[", "").replace("]", "").replace("'", "")
-#        return skills.split(",")
-
 
 class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=150, unique=True, null=False)
+    description = models.TextField(max_length=400, blank=True)
     timeline = models.CharField(max_length=25, null=False)
-    requirements = models.CharField(max_length=255, null=False)
+    requirements = models.TextField(max_length=300, null=False)
     finished = models.BooleanField(default=False)
     positions = models.CharField(max_length=75)
 
     def __str__(self):
         return self.title
-
-
-class Application(models.Model):
-    project = models.OneToOneField('Project', on_delete=models.CASCADE)
-    candidate = models.OneToOneField('Profile', on_delete=models.CASCADE)
-    position = models.OneToOneField('Position', on_delete=models.CASCADE)
-    status = models.CharField(default='', max_length=2,
-        choices=[('a','Accepted'), ('r', 'Rejected')])
 
 
 class Position(models.Model):
@@ -66,8 +48,16 @@ class Position(models.Model):
         return self.name
 
 
+class Application(models.Model):
+    project = models.OneToOneField('Project', on_delete=models.CASCADE)
+    candidate = models.OneToOneField('Profile', on_delete=models.CASCADE)
+    position = models.OneToOneField('Position', on_delete=models.CASCADE)
+    status = models.CharField(default='', max_length=2,
+        choices=[('a','Accepted'), ('r', 'Rejected')])
+
+
 # Signal to create a Profile once a User is registered
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(username=instance)
+        Profile.objects.create(user=instance)

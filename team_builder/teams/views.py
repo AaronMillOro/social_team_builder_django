@@ -96,7 +96,7 @@ def add_skills(request):
     """ View to render skills from database and to add a new skill """
     if request.method == 'POST':
         new_skill_form = forms.NewSkillForm(request.POST)
-        if new_skill_form.is_valid:
+        if new_skill_form.is_valid():
             new_skill_form.save()
             messages.success(request, 'New skill added to database!')
             return redirect('teams:add_skills')
@@ -109,7 +109,7 @@ def add_skills(request):
     )
 
 
-# ---- Projects logic: CREATE, READ(listing of all), UPDATE, DELETE ----
+# ---- Projects logic: CRUD (Create, Read, Update, Delete) ----
 def projects(request):
     if request.method == 'GET':
         #applications = request.applications
@@ -118,9 +118,25 @@ def projects(request):
     return render(request, 'projects.html', {'projects': projects})
 
 
-class ProjectCreateView(CreateView):
-    fields = ('title', 'timeline', 'requirements')
-    model = models.Project
+#class ProjectCreateView(CreateView):
+#    fields = ('title', 'timeline', 'requirements', 'finished')
+#    model = models.Project
+@login_required
+def create_project(request):
+    if request.method == 'POST':
+        project_form_a = forms.ProjectFormPartA(request.POST, instance=request.user)
+        project_form_b = forms.ProjectFormPartB(request.POST, instance=request.user)
+        if project_form_a.is_valid() and project_form_b.is_valid():
+            project_form_a.save()
+            project_form_b.save()
+            messages.success(request, 'New project created!')
+            return redirect('teams:projects')
+    else:
+        project_form_a = forms.ProjectFormPartA()
+        project_form_b = forms.ProjectFormPartB()
+    return render(request, 'create_project.html', {
+        'project_form_a': project_form_a, 'project_form_b': project_form_b}
+    )
 
 
 # ---- Applications logic ----

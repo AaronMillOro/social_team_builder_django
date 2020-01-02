@@ -7,6 +7,7 @@ from . import models
 
 
 class ProfileForm(forms.ModelForm):
+    """Form to populate User basic data"""
 
     class Meta:
         model = models.Profile
@@ -20,7 +21,7 @@ class ProfileForm(forms.ModelForm):
         }
 
     def clean_bio(self):
-        ''' Validation that biography has 10 or more characters'''
+        '''Validation that biography has 10 or more characters'''
         bio = self.cleaned_data['bio']
         if len(bio) < 10:
             raise forms.ValidationError(
@@ -29,17 +30,11 @@ class ProfileForm(forms.ModelForm):
 
 
 class SkillsForm(forms.ModelForm):
+    """ User can select the skills provided from database"""
     skills = forms.ModelMultipleChoiceField(
         queryset=models.Skill.objects.all(), required=False,
         widget=forms.CheckboxSelectMultiple, label='',
     )
-    #skills = forms.MultipleChoiceField(
-    #skills = forms.ModelChoiceField(
-        #queryset=models.Skill.objects.values_list('skill_name',flat=True).distinct(),
-    #    choices=models.Skill.objects.all().values_list(),
-    #    widget=forms.CheckboxSelectMultiple,
-    #
-    #)
 
     class Meta:
         model = models.Profile
@@ -47,6 +42,7 @@ class SkillsForm(forms.ModelForm):
 
 
 class NewSkillForm(forms.ModelForm):
+    """User can add a new skill that is not present in the DB"""
     skill_name = forms.CharField(max_length=20, label='',
         widget=forms.TextInput(attrs={
             'placeholder': 'Another skill not cited on the list?'}
@@ -56,3 +52,27 @@ class NewSkillForm(forms.ModelForm):
     class Meta:
         model = models.Skill
         fields = ('skill_name',)
+
+
+class ProjectFormPartA(forms.ModelForm):
+    title = forms.CharField(widget=forms.TextInput(
+        attrs={'placeholder':'Project Title'}), label=''
+    )
+    description = forms.CharField(widget=forms.Textarea(
+        attrs={'placeholder':'Project description'}), label=''
+    )
+
+    class Meta:
+        model = models.Project
+        fields = ('title', 'description',)
+
+
+class ProjectFormPartB(forms.ModelForm):
+    timeline = forms.CharField(widget=forms.TextInput(
+        attrs={'placeholder':'Time estimated'}), label='Project Timeline'
+    )
+
+    class Meta:
+        model = models.Project
+        fields = ('timeline', 'requirements',)
+        labels = {'requirements': 'Applicant Requirements',}

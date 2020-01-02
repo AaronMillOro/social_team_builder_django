@@ -18,9 +18,7 @@ urlpatterns = [
     url(r'^add_skill/$', views.add_skills, name='add_skills'),
 
     url(r'^projects/$', views.projects, name='projects'),
-    url(r'^projects_create/$',
-        views.ProjectCreateView.as_view(), name='project_create'
-    ),
+    url(r'^projects_create/$', views.create_project, name='create_project'),
 
     url(r'^applications/$', views.applications, name='applications'),
 
