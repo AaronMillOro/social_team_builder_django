@@ -110,6 +110,7 @@ def add_skills(request):
 
 
 # ---- Projects logic: CRUD (Create, Read, Update, Delete) ----
+@login_required
 def projects(request):
     if request.method == 'GET':
         #applications = request.applications
@@ -124,9 +125,17 @@ def projects(request):
 @login_required
 def create_project(request):
     if request.method == 'POST':
-        project_form_a = forms.ProjectFormPartA(request.POST, instance=request.user)
-        project_form_b = forms.ProjectFormPartB(request.POST, instance=request.user)
+        project_form_a = forms.ProjectFormPartA(request.POST)
+        project_form_b = forms.ProjectFormPartB(request.POST)
         if project_form_a.is_valid() and project_form_b.is_valid():
+            # First part of the form
+            project_form_a = project_form_a.save(commit=False)
+            project_form_a.creator = request.user
+
+            project_form_b = project_form_b.save(commit=False)
+            project_form_b.creator = request.user
+
+            # Second part of the form
             project_form_a.save()
             project_form_b.save()
             messages.success(request, 'New project created!')

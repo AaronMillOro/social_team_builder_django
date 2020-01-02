@@ -12,9 +12,7 @@ class Skill(models.Model):
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(
-        User, on_delete=models.CASCADE, unique=True
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
     fullname = models.CharField(max_length=200, blank=True)
     bio = models.TextField(max_length=400, blank=True)
     avatar = models.ImageField(upload_to='images/', null=True, blank=True)
@@ -27,8 +25,8 @@ class Profile(models.Model):
 
 
 class Project(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    title = models.CharField(max_length=150, unique=True, null=False)
+    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=150, null=False)
     description = models.TextField(max_length=400, blank=True)
     timeline = models.CharField(max_length=25, null=False)
     requirements = models.TextField(max_length=300, null=False)
