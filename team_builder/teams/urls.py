@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^profile_edit/$', views.profile_edit, name='profile_edit'),
     url(r'^add_skill/$', views.add_skills, name='add_skills'),
 
-    url(r'^projects/$', views.projects, name='projects'),
+    url(r'^projects/$', views.my_projects, name='my_projects'),
     url(r'^projects_create/$', views.create_project, name='create_project'),
 
     url(r'^applications/$', views.applications, name='applications'),

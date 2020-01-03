@@ -4,11 +4,15 @@
 {% block content %}
 <div class="bounds circle--page">
 
-  <div  class="circle--fluid--cell circle--fluid--primary">
+  <div  class="grid-100 circle--fluid--cell circle--fluid--primary">
     <h2>My projects</h2>
   </div>
 
-  <div class="circle--fluid--cell circle--fluid--secondary">
+  <div class="grid-40">
+    <p></p>
+  </div>
+
+  <div class="grid-60 circle--fluid--cell circle--fluid--secondary">
     <a class="button button-primary icon-on-left" href="{% url 'teams:create_project' %}"}>
       <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 13 13" style="enable-background:new 0 0 13 13;" xml:space="preserve" class="add">
         <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "/>
@@ -18,48 +22,42 @@
   </div>
 
 
-    <div class="grid-20">
-      <h3>All needs</h3>
-      <ul>
-        <li> askasjkaj </li>
-        <li> askasjkaj </li>
-        <li> askasjkaj </li>
-        <li> askasjkaj </li>
-        <li> askasjkaj </li>
-        <li> askasjkaj </li>
-        <li> askasjkaj </li>
-        <li> askasjkaj </li>
-      </ul>
-    </div>
+  <div class="grid-20">
+    <h3>All needs</h3>
+    <ul>
+      <li> askasjkaj </li>
+      <li> askasjkaj </li>
+      <li> askasjkaj </li>
+      <li> askasjkaj </li>
+      <li> askasjkaj </li>
+      <li> askasjkaj </li>
+      <li> askasjkaj </li>
+      <li> askasjkaj </li>
+    </ul>
+  </div>
 
-    <!-- Table with projects and positions -->
-    <div class="grid-55 grid-push-5">
-
-      <table class="circle--table u-full-width">
-        <thead>
-          <tr>
-            <th>Project Title</th>
-            <th class="circle--cell--right align-right">Project Needs</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr class="clickable-row" data-href="project.html">
-            <td><h3>Invoice Delivery Tool</h3></td>
-            <td class="circle--cell--right align-right">
+<!-- Table with projects and positions -->
+  <div class="grid-55 grid-push-5">
+    <table class="circle--table u-full-width">
+      <thead>
+        <tr>
+          <th>Project Title</th>
+          <th class="circle--cell--right align-right">Project Needs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in projects %}
+        <tr class="clickable-row" data-href="project.html">
+          <td><h3>{{ project.title }}</h3></td>
+          <!-- another FOR loop for each position on each project -->
+          <td class="circle--cell--right align-right">
               <span class="secondary-label">Rails Developer</span>
-            </td>
-          </tr>
-
-        </tbody>
-
-      </table>
-
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
-
-
-
-
-  </div>
+</div>
 
 {% endblock %}
