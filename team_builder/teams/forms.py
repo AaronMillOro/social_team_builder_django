@@ -14,6 +14,7 @@ class ProfileForm(forms.ModelForm):
         fields = (
             'fullname', 'bio', 'avatar',
         )
+        required = ('fullname',)
         labels = {
             'fullname': 'ENTER NAME',
             'bio': 'SHORT BIOGRAPHY',

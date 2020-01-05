@@ -13,7 +13,7 @@ class Skill(models.Model):
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
-    fullname = models.CharField(max_length=200, blank=True)
+    fullname = models.CharField(max_length=200, null=True)
     bio = models.TextField(max_length=400, blank=True)
     avatar = models.ImageField(upload_to='images/', null=True, blank=True)
     skills = models.ManyToManyField('Skill', blank=True)

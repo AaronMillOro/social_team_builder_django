@@ -127,8 +127,9 @@ def create_project(request):
     try:
         form_a = forms.ProjectFormPartA()
         form_b = forms.ProjectFormPartB()
-        formset = forms.PositionFormSet()
-
+        formset = forms.PositionFormSet(
+            queryset=models.Project.objects.none()
+        )
         if request.method == 'POST':
             form_a = forms.ProjectFormPartA(request.POST)
             form_b = forms.ProjectFormPartB(request.POST)
