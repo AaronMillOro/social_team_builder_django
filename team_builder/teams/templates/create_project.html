@@ -25,7 +25,7 @@
 <!--Positions form -->
     <div class="grid-100 circle--project--positions">
       <h2>Positions</h2>
-      {{ pos_formset.management_form }}
+      {{ formset.management_form }}
       <table role="grid" class="stack hover" style="width: 100%">
         <thead>
           <tr>
@@ -34,7 +34,7 @@
           </tr>
         </thead>
         <tbody>
-          {% for form in pos_formset %}
+          {% for form in formset %}
           <tr class="link-formset circle--clone--add">
             <td style="width: 20%">{{ form.name }}</td>
             <td style="width: 80%">{{ form.description }}</td>

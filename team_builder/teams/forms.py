@@ -91,5 +91,5 @@ class PositionForm(forms.ModelForm):
 PositionFormSet = forms.modelformset_factory(
 models.Position,
 fields=('name', 'description',),
-extra=2,
+extra=1,
 )

@@ -36,7 +36,6 @@ class Project(models.Model):
     timeline = models.CharField(max_length=25, null=False)
     requirements = models.TextField(max_length=300, null=False)
     finished = models.BooleanField(default=False)
-    positions = models.ManyToManyField('Position', blank=True)
 
     def __str__(self):
         return self.title
@@ -46,6 +45,7 @@ class Position(models.Model):
     name = models.CharField(max_length=150)
     description = models.CharField(max_length=300)
     available = models.BooleanField(default=True)
+    project = models.ForeignKey('Project', on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
