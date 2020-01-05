@@ -115,31 +115,38 @@ def my_projects(request):
     if request.method == 'GET':
         #applications = request.applications
         #positions = request.positions
-        projects = models.Project.objects.all()
+        projects = models.Project.objects.filter(creator=request.user.id)
     return render(request, 'projects.html', {'projects': projects})
 
 
-#class ProjectCreateView(CreateView):
-#    fields = ('title', 'timeline', 'requirements', 'finished')
-#    model = models.Project
 @login_required
 def create_project(request):
     if request.method == 'POST':
         form_a = forms.ProjectFormPartA(request.POST)
         form_b = forms.ProjectFormPartB(request.POST)
-        if form_a.is_valid() and form_b.is_valid():
-            form_b = form_b.save(commit=False)
+        pos_formset = forms.PositionFormSet(request.POST)
+        if form_a.is_valid() and form_b.is_valid() and pos_formset.is_valid():
+            nb_positions = 0
+            positions = pos_formset.save(commit=False)
+            for position in positions:
+                nb_positions += 1
+                position.save()
+
+            form_b = form_b.save(commit=False) #fills timeline and needs
             form_b.creator = request.user
             form_b.title = form_a.cleaned_data['title']
             form_b.description = form_a.cleaned_data['description']
-            form_b.save()
+            form_b.save() # save project instance
+#            position = models.Position.objects.order_by('id').last()
+#            form_b.position = position
             messages.success(request, 'New project created!')
-            return redirect('teams:projects')
+            return redirect('teams:my_projects')
     else:
         form_a = forms.ProjectFormPartA()
         form_b = forms.ProjectFormPartB()
+        pos_formset = forms.PositionFormSet()
     return render(request, 'create_project.html', {
-        'form_a': form_a, 'form_b': form_b}
+        'form_a': form_a, 'form_b': form_b, 'pos_formset': pos_formset,}
     )
 
 

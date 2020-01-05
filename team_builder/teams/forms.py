@@ -55,6 +55,7 @@ class NewSkillForm(forms.ModelForm):
 
 
 class ProjectFormPartA(forms.ModelForm):
+    """ User can create a new project Part A """
     title = forms.CharField(widget=forms.TextInput(
         attrs={'placeholder':'Project Title'}), label=''
     )
@@ -68,6 +69,7 @@ class ProjectFormPartA(forms.ModelForm):
 
 
 class ProjectFormPartB(forms.ModelForm):
+    """ User can create a new project Part B """
     timeline = forms.CharField(widget=forms.TextInput(
         attrs={'placeholder':'Time estimated'}), label='Project Timeline'
     )
@@ -76,3 +78,18 @@ class ProjectFormPartB(forms.ModelForm):
         model = models.Project
         fields = ('timeline', 'requirements',)
         labels = {'requirements': 'Applicant Requirements',}
+
+
+class PositionForm(forms.ModelForm):
+    """ User can add required Positions to a Project """
+
+    class Meta:
+        model = models.Position
+        fields = ('name', 'description',)
+
+
+PositionFormSet = forms.modelformset_factory(
+models.Position,
+fields=('name', 'description',),
+extra=2,
+)
