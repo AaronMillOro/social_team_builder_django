@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="bounds circle--page">
+  <div class="grid-100">
+    <a class="button button-primary" href="{% url 'teams:my_projects' %}">Edit Project</a>
+    <a class="button button-text" href="{% url 'teams:my_projects' %}">Delete Project</a>
+  </div>
+  <div class="grid-70">
+    <div class="circle--article-byline">
+      <br>
+      <h4 class="circle--article--section">Project</h4>
+      <h1 class="circle--article--title">{{ project.title }}</h1>
+      <p class="circle--article--byline">Project Owner: <a>{{ project.creator }}</a></p>
+      <br><br>
+      <p class="circle--article--body">{{ project.description }}</p>
+    </div>
+  </div>
+  <div class="grid-25 grid-push-5">
+    <div class="circle--secondary--module">
+      <h3>Project needs</h3>
+      <ul>
+        {% for position in positions%}
+          <li><a>{{ position.name }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="circle--secondary--module">
+      <h3>Project Timeline</h3>
+      <p>{{ project.timeline }}</p>
+    </div>
+    <div class="circle--secondary--module">
+      <h3>Applicant Requirements</h3>
+      <p>{{ project.requirements }}</p>
+    </div>
+  </div>
+
+  <div class="grid-70">
+    <h2> </h2>
+  </div>
+</div>
+{% endblock %}

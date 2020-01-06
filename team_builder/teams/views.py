@@ -5,7 +5,7 @@ from django.contrib.auth import (authenticate, login, logout,
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpResponseRedirect
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
@@ -115,15 +115,19 @@ def add_skills(request):
 @login_required
 def my_projects(request):
     if request.method == 'GET':
-        #applications = request.applications
-        #positions = request.positions
-        projects = models.Project.objects.filter(creator=request.user.id)
-    return render(request, 'projects.html', {'projects': projects})
+        positions = models.Position.objects.filter(
+            project_id__creator=request.user.id).order_by('name')
+        projects = models.Project.objects.filter(
+            creator=request.user.id).order_by('title')
+    return render(request, 'projects.html', {
+        'projects': projects, 'positions': positions}
+    )
 
 
 @login_required
+@transaction.atomic
 def create_project(request):
-
+    """ View to create a Project with its required positions """
     try:
         form_a = forms.ProjectFormPartA()
         form_b = forms.ProjectFormPartB()
@@ -153,6 +157,16 @@ def create_project(request):
         messages.error(request, 'Check the form data!')
     return render(request, 'create_project.html', {
         'form_a': form_a, 'form_b': form_b, 'formset': formset,}
+    )
+
+
+def project_details(request, pk):
+    """Display details of a project"""
+    project = get_object_or_404(models.Project, pk=pk)
+    positions = models.Position.objects.filter(
+        project=project.id).order_by('name')
+    return render(request, 'project_details.html',
+        {'project':project, 'positions':positions, }
     )
 
 

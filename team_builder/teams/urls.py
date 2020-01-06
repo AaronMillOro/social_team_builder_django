@@ -4,6 +4,7 @@ from django.conf.urls import url
 from django.contrib.staticfiles.urls import static
 
 from . import views
+import re
 
 app_name = 'teams'
 
@@ -19,6 +20,8 @@ urlpatterns = [
 
     url(r'^projects/$', views.my_projects, name='my_projects'),
     url(r'^projects_create/$', views.create_project, name='create_project'),
+    url(r'^project_details/(?P<pk>\d+)/$', views.project_details,
+        name='project_details'),
 
     url(r'^applications/$', views.applications, name='applications'),
 
