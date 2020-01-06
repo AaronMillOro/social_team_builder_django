@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="bounds circle--page">
+  <form method="POST" enctype="multipart/form-data" action="">
+    {% csrf_token %}
+    <div class="grid-100">
+      <input type="submit" class="button button-primary" href="{% url 'teams:my_projects' %}" value="UPDATE PROJECT">
+      <a class="button button-text" href="{% url 'teams:my_projects' %}">DISCARD</a>
+    </div>
+<!-- First part of the Project form -->
+    <div class="grid-70">
+      <div class="circle--article--body">
+        <p></p>
+        {{ form_a.as_p }}
+      </div>
+    </div>
+<!-- Second part of the Project form -->
+    <div class="grid-25 grid-push-5">
+      <div class="circle--secondary--module">
+        {{ form_b.as_p }}
+      </div>
+    </div>
+<!--Positions form -->
+    <div class="grid-100 circle--project--positions">
+      <h2>Positions</h2>
+      {{ formset.management_form }}
+      <table role="grid" class="stack hover" style="width: 100%">
+        <thead>
+          <tr>
+            <th scope="col" class="text-center" style="width: 10%">Position</th>
+            <th scope="col" class="text-center" style="width: 10%">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for form in formset %}
+          <tr class="link-formset circle--clone--add">
+            <td style="width: 20%">{{ form.name }}</td>
+            <td style="width: 80%">{{ form.description }}</td>
+            <td> </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+<!-- Submit buttom -->
+    <div class="grid-100">
+      <br><br>
+      <input type="submit" class="button button-primary" href="{% url 'teams:my_projects' %}" value="SAVE PROJECT">
+    </div>
+  </form>
+<!-- Jquery script to add extra forms in formset of Positions -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+  <script src="{% static 'js/jquery.formset.js' %}"></script>
+  <script>
+      $('.link-formset').formset({
+          addText: 'Add position',
+          deleteText: 'Remove'
+      });
+  </script>
+</div>
+{% endblock %}

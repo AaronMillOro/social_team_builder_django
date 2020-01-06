@@ -14,12 +14,12 @@ class Skill(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, unique=True)
     fullname = models.CharField(max_length=200, null=True)
-    bio = models.TextField(max_length=400, blank=True)
+    bio = models.TextField(max_length=700, blank=True)
     avatar = models.ImageField(upload_to='images/', null=True, blank=True)
     skills = models.ManyToManyField('Skill', blank=True)
 
     def __str__(self):
-        return self.username
+        return self.fullname
 
 
 # Signal to create a Profile once a User is registered
@@ -30,9 +30,9 @@ def create_user_profile(sender, instance, created, **kwargs):
 
 
 class Project(models.Model):
-    creator = models.ForeignKey(User, on_delete=models.CASCADE)
+    creator = models.ForeignKey('Profile', on_delete=models.CASCADE)
     title = models.CharField(max_length=150, null=False, unique=True)
-    description = models.TextField(max_length=400, blank=True)
+    description = models.TextField(max_length=700, blank=True)
     timeline = models.CharField(max_length=25, null=False)
     requirements = models.TextField(max_length=300, null=False)
     finished = models.BooleanField(default=False)
@@ -42,8 +42,8 @@ class Project(models.Model):
 
 
 class Position(models.Model):
-    name = models.CharField(max_length=150)
-    description = models.CharField(max_length=300)
+    name = models.CharField(max_length=150, blank=False)
+    description = models.CharField(max_length=400, blank=False)
     available = models.BooleanField(default=True)
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
 
@@ -55,5 +55,5 @@ class Application(models.Model):
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
     candidate = models.ForeignKey('Profile', on_delete=models.CASCADE)
     position = models.ForeignKey('Position', on_delete=models.CASCADE)
-    status = models.CharField(default='', max_length=2,
-        choices=[('a','Accepted'), ('r', 'Rejected')])
+    status = models.CharField(default='w', max_length=2,
+        choices=[('a','Accepted'), ('r', 'Rejected'), ('w', 'Waiting')])

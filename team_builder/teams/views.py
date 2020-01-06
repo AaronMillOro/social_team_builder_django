@@ -141,7 +141,9 @@ def create_project(request):
 
             if form_a.is_valid() and form_b.is_valid():
                 project = form_b.save(commit=False) #fills timeline and needs
-                project.creator = request.user
+                project.creator = models.Profile.objects.get(
+                    pk=request.user.id
+                )
                 project.title = form_a.cleaned_data['title']
                 project.description = form_a.cleaned_data['description']
 
@@ -155,7 +157,7 @@ def create_project(request):
                     return HttpResponseRedirect(reverse('teams:my_projects'))
     except ValueError:
         messages.error(request, 'Check the form data!')
-    return render(request, 'create_project.html', {
+    return render(request, 'project_create.html', {
         'form_a': form_a, 'form_b': form_b, 'formset': formset,}
     )
 
@@ -167,6 +169,44 @@ def project_details(request, pk):
         project=project.id).order_by('name')
     return render(request, 'project_details.html',
         {'project':project, 'positions':positions, }
+    )
+
+
+def project_edit(request, pk):
+    """Edit a previously created project"""
+    project = get_object_or_404(models.Project, pk=pk)
+    positions = models.Position.objects.filter(
+        project=project.id).order_by('name')
+
+    try:
+        form_a = forms.ProjectFormPartA(instance=project)
+        form_b = forms.ProjectFormPartB(instance=project)
+        formset = forms.PositionFormSet(queryset=positions)
+        if request.method == 'POST':
+            form_a = forms.ProjectFormPartA(request.POST)
+            form_b = forms.ProjectFormPartB(request.POST)
+            formset = forms.PositionFormSet(request.POST)
+
+            if form_a.is_valid() and form_b.is_valid():
+                project = form_b.save(commit=False) #fills timeline and needs
+                project.creator = models.Profile.objects.get(
+                    pk=request.user.id
+                )
+                project.title = form_a.cleaned_data['title']
+                project.description = form_a.cleaned_data['description']
+
+                if formset.is_valid():
+                    project.save() # save project instance
+                    for position in formset:
+                        position = position.save(commit=False)
+                        position.project = project
+                        position.save()
+                    messages.success(request, 'Project successfully updated!')
+                    return HttpResponseRedirect(reverse('teams:my_projects'))
+    except ValueError:
+        messages.error(request, 'Check the form data!')
+    return render(request, 'project_create.html', {
+        'form_a': form_a, 'form_b': form_b, 'formset': formset,}
     )
 
 

@@ -3,10 +3,14 @@
 
 {% block content %}
 <div class="bounds circle--page">
-  <div class="grid-100">
-    <a class="button button-primary" href="{% url 'teams:my_projects' %}">Edit Project</a>
-    <a class="button button-text" href="{% url 'teams:my_projects' %}">Delete Project</a>
-  </div>
+  {% if user.is_authenticated %}
+   {% if user.profile == project.creator %}
+      <div class="grid-100">
+        <a class="button button-primary" href="{% url 'teams:project_edit' pk=project.id %}">Edit Project</a>
+        <a class="button button-text" href="{% url 'teams:my_projects' %}">Delete Project</a>
+      </div>
+    {% endif %}
+  {% endif %}
   <div class="grid-70">
     <div class="circle--article-byline">
       <br>
@@ -45,7 +49,10 @@
         <p>{{ position.description }}</p>
         {% if position.available != 0 %}
           {% if user.is_authenticated %}
-            <a class="button button-primary">Apply</a>
+            {% if user.profile != project.creator %}
+            <!-- Creator cannot apply for a position that was created by her/himself -->
+              <a class="button button-primary">Apply</a>
+            {% endif %}
           {% else %}
             <a>LogIn to apply</a>
           {% endif %}
