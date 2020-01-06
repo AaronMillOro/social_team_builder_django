@@ -161,7 +161,7 @@ def create_project(request):
 
 
 def project_details(request, pk):
-    """Display details of a project"""
+    """Display details of a project and the positions of it"""
     project = get_object_or_404(models.Project, pk=pk)
     positions = models.Position.objects.filter(
         project=project.id).order_by('name')
