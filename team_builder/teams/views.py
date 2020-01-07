@@ -150,9 +150,12 @@ def create_project(request):
                 if formset.is_valid():
                     project.save() # save project instance
                     for position in formset:
-                        position = position.save(commit=False)
-                        position.project = project
-                        position.save()
+                        if position.cleaned_data != {}: #No empty instances
+                            position = position.save(commit=False)
+                            position.project = project
+                            position.save()
+                        else:
+                            pass
                     messages.success(request, 'New project created!')
                     return HttpResponseRedirect(reverse('teams:my_projects'))
     except ValueError:

@@ -83,14 +83,18 @@ class ProjectFormPartB(forms.ModelForm):
 
 class PositionForm(forms.ModelForm):
     """ User can add required Positions to a Project """
+    related_skill = forms.ModelChoiceField(
+        queryset=models.Skill.objects.all(),
+        widget=forms.Select(attrs={'class': 'related_skill'}),
+    )
 
     class Meta:
         model = models.Position
-        fields = ('name', 'description',)
+        fields = ('name', 'description', 'related_skill',)
 
 
 PositionFormSet = forms.modelformset_factory(
 models.Position,
-fields=('name', 'description',),
+fields=('name', 'description', 'related_skill'),
 extra=1,
 )

@@ -44,6 +44,7 @@ class Project(models.Model):
 class Position(models.Model):
     name = models.CharField(max_length=150, blank=False)
     description = models.CharField(max_length=400, blank=False)
+    related_skill = models.ForeignKey('Skill', on_delete=models.CASCADE)
     available = models.BooleanField(default=True)
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
 

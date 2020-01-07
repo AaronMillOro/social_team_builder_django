@@ -31,13 +31,15 @@
           <tr>
             <th scope="col" class="text-center" style="width: 10%">Position</th>
             <th scope="col" class="text-center" style="width: 10%">Description</th>
+            <th scope="col" class="text-center" style="width: 10%">Related Skill</th>
           </tr>
         </thead>
         <tbody>
           {% for form in formset %}
           <tr class="link-formset circle--clone--add">
             <td style="width: 20%">{{ form.name }}</td>
-            <td style="width: 80%">{{ form.description }}</td>
+            <td style="width: 50%">{{ form.description }}</td>
+            <td style="width: 30%">{{ form.related_skill }}</td>
             <td> </td>
           </tr>
           {% endfor %}
