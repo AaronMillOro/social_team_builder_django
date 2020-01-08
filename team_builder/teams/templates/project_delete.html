@@ -3,6 +3,8 @@
 
 {% block content %}
 <div class="bounds circle--page">
+  {% if user.is_authenticated %}
+   {% if user.profile == project.creator %}
   <form method="POST" action="">
     {% csrf_token %}
     <div class="grid-100">
@@ -11,5 +13,7 @@
       <a class="button button-text" href="{% url 'teams:project_details' pk=project.id %}">GO BACK</a>
     </div>
   </form>
+    {% endif %}
+  {% endif %}
 </div>
 {% endblock %}

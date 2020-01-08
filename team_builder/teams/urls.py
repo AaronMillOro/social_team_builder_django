@@ -13,20 +13,19 @@ urlpatterns = [
     url(r'^sign_up/$', views.sign_up, name='sign_up'),
     url(r'^sign_in/$', views.sign_in, name='sign_in'),
     url(r'^sign_out/$', views.sign_out, name='sign_out'),
-
+    # Profile
     url(r'^profile/$', views.profile, name='profile'),
     url(r'^profile_edit/$', views.profile_edit, name='profile_edit'),
     url(r'^add_skill/$', views.add_skills, name='add_skills'),
-
+    # Project
     url(r'^projects/$', views.my_projects, name='my_projects'),
-    url(r'^projects_create/$', views.create_project, name='create_project'),
+    url(r'^projects_create/$', views.create_project,
+        name='create_project'),
     url(r'^project_details/(?P<pk>\d+)/$', views.project_details,
         name='project_details'),
-    url(r'project_edit/(?P<pk>\d+)/$', views.project_edit,
-        name='project_edit'),
-    url(r'project_delete/(?P<pk>\d+)/$', views.project_delete, 
+    url(r'project_delete/(?P<pk>\d+)/$', views.project_delete,
         name='project_delete'),
-
+    # Applications
     url(r'^applications/$', views.applications, name='applications'),
 
 ]

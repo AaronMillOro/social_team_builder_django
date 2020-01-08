@@ -6,8 +6,7 @@
   {% if user.is_authenticated %}
    {% if user.profile == project.creator %}
       <div class="grid-100">
-        <a class="button button-primary" href="{% url 'teams:project_edit' pk=project.id %}">Edit Project</a>
-        <a class="button button-text" href="{% url 'teams:project_delete' pk=project.id %}">Delete Project</a>
+        <a class="button button-primary" href="{% url 'teams:project_delete' pk=project.id %}">Delete Project</a>
       </div>
     {% endif %}
   {% endif %}

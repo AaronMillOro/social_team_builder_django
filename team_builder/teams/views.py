@@ -111,7 +111,7 @@ def add_skills(request):
     )
 
 
-# ---- Projects logic: CRUD (Create, Read, Update, Delete) ----
+# ---- Projects logic: Create, Read, Delete ----
 @login_required
 def my_projects(request):
     if request.method == 'GET':
@@ -173,48 +173,7 @@ def project_details(request, pk):
     )
 
 
-def project_edit(request, pk):
-    """Edit a previously created project"""
-    project = get_object_or_404(models.Project, pk=pk)
-    positions = models.Position.objects.filter(
-        project=project.id).order_by('name')
-
-    try:
-        form_a = forms.ProjectFormPartA(instance=project)
-        form_b = forms.ProjectFormPartB(instance=project)
-        formset = forms.PositionFormSet(queryset=positions)
-        if request.method == 'POST':
-            form_a = forms.ProjectFormPartA(request.POST, instance=project)
-            form_b = forms.ProjectFormPartB(request.POST, instance=project)
-            formset = forms.PositionFormSet(request.POST, queryset=positions)
-
-            if form_a.is_valid() and form_b.is_valid():
-                project = form_b.save(commit=False) #fills timeline and needs
-                project.creator = models.Profile.objects.get(
-                    pk=request.user.id
-                )
-                project.title = form_a.cleaned_data['title']
-                project.description = form_a.cleaned_data['description']
-
-                if formset.is_valid():
-                    project.save() # save project instance
-                    for position in formset:
-                        if position.cleaned_data != {}:
-                            position = position.save(commit=False)
-                            position.project = project
-                            position.save()
-                        else:
-                            pass
-                    messages.success(request, 'Project successfully updated!')
-                    return HttpResponseRedirect(reverse('teams:my_projects'))
-    except ValueError:
-        messages.error(request, 'Check the form data!')
-    return render(request, 'project_edit.html', {
-        'form_a': form_a, 'form_b': form_b, 'formset': formset,
-        'project': project, 'positions':positions,}
-    )
-
-
+@login_required
 def project_delete(request, pk):
     """Ask user to delete a previously created project"""
     project = get_object_or_404(models.Project, pk=pk)
@@ -229,6 +188,7 @@ def project_delete(request, pk):
 
 
 # ---- Applications logic ----
+@login_required
 def applications(request):
     if request.method == 'GET':
         #applications = request.applications
