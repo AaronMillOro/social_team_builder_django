@@ -154,8 +154,6 @@ def create_project(request):
                             position = position.save(commit=False)
                             position.project = project
                             position.save()
-                        else:
-                            pass
                     messages.success(request, 'New project created!')
                     return HttpResponseRedirect(reverse('teams:my_projects'))
     except ValueError:
@@ -186,9 +184,9 @@ def project_edit(request, pk):
         form_b = forms.ProjectFormPartB(instance=project)
         formset = forms.PositionFormSet(queryset=positions)
         if request.method == 'POST':
-            form_a = forms.ProjectFormPartA(request.POST)
-            form_b = forms.ProjectFormPartB(request.POST)
-            formset = forms.PositionFormSet(request.POST)
+            form_a = forms.ProjectFormPartA(request.POST, instance=project)
+            form_b = forms.ProjectFormPartB(request.POST, instance=project)
+            formset = forms.PositionFormSet(request.POST, queryset=positions)
 
             if form_a.is_valid() and form_b.is_valid():
                 project = form_b.save(commit=False) #fills timeline and needs
@@ -201,15 +199,32 @@ def project_edit(request, pk):
                 if formset.is_valid():
                     project.save() # save project instance
                     for position in formset:
-                        position = position.save(commit=False)
-                        position.project = project
-                        position.save()
+                        if position.cleaned_data != {}:
+                            position = position.save(commit=False)
+                            position.project = project
+                            position.save()
+                        else:
+                            pass
                     messages.success(request, 'Project successfully updated!')
                     return HttpResponseRedirect(reverse('teams:my_projects'))
     except ValueError:
         messages.error(request, 'Check the form data!')
-    return render(request, 'project_create.html', {
-        'form_a': form_a, 'form_b': form_b, 'formset': formset,}
+    return render(request, 'project_edit.html', {
+        'form_a': form_a, 'form_b': form_b, 'formset': formset,
+        'project': project, 'positions':positions,}
+    )
+
+
+def project_delete(request, pk):
+    """Ask user to delete a previously created project"""
+    project = get_object_or_404(models.Project, pk=pk)
+    if request.method == 'POST':
+        models.Position.objects.filter(project=project.id).delete()
+        models.Project.objects.filter(id=pk).delete()
+        messages.success(request, 'Project was deleted T_T ')
+        return HttpResponseRedirect(reverse('teams:my_projects'))
+    return render(request, 'project_delete.html',
+        {'project': project, }
     )
 
 

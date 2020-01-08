@@ -22,8 +22,10 @@ urlpatterns = [
     url(r'^projects_create/$', views.create_project, name='create_project'),
     url(r'^project_details/(?P<pk>\d+)/$', views.project_details,
         name='project_details'),
-    url(r'project_edit/(?P<pk>\d+)/$', views.project_edit, 
+    url(r'project_edit/(?P<pk>\d+)/$', views.project_edit,
         name='project_edit'),
+    url(r'project_delete/(?P<pk>\d+)/$', views.project_delete, 
+        name='project_delete'),
 
     url(r'^applications/$', views.applications, name='applications'),
 

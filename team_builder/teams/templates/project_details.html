@@ -7,7 +7,7 @@
    {% if user.profile == project.creator %}
       <div class="grid-100">
         <a class="button button-primary" href="{% url 'teams:project_edit' pk=project.id %}">Edit Project</a>
-        <a class="button button-text" href="{% url 'teams:my_projects' %}">Delete Project</a>
+        <a class="button button-text" href="{% url 'teams:project_delete' pk=project.id %}">Delete Project</a>
       </div>
     {% endif %}
   {% endif %}
@@ -54,7 +54,7 @@
               <a class="button button-primary">Apply</a>
             {% endif %}
           {% else %}
-            <a>LogIn to apply</a>
+            <a>Log in to apply</a>
           {% endif %}
         {% else %}
           <a class="button button-primary button-inactive">Position Filled</a>

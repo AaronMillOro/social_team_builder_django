@@ -7,7 +7,7 @@
     {% csrf_token %}
     <div class="grid-100">
       <input type="submit" class="button button-primary" href="{% url 'teams:my_projects' %}" value="UPDATE PROJECT">
-      <a class="button button-text" href="{% url 'teams:my_projects' %}">DISCARD</a>
+      <a class="button button-text" href="{% url 'teams:project_details' pk=project.id %}">DISCARD</a>
     </div>
 <!-- First part of the Project form -->
     <div class="grid-70">

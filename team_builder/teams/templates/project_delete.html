@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="bounds circle--page">
+  <form method="POST" action="">
+    {% csrf_token %}
+    <div class="grid-100">
+      <h2>Are your sure to delete the project '{{ project.title }}' ?</h2>
+      <input type="submit" class="button button-primary" value="DELETE PROJECT">
+      <a class="button button-text" href="{% url 'teams:project_details' pk=project.id %}">GO BACK</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
