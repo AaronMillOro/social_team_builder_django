@@ -5,13 +5,16 @@
 <div class="bounds circle--page">
   <div class="grid-70">
     <h2>{{ profile.fullname }}</h2>
-
-    <!-- Edit button -->
-    <div class="circle--page--header circle--fluid">
-      <div class="circle--fluid--cell circle--fluid--secondary">
-        <a class="button icon-on-left" href="{% url 'teams:profile_edit' %}">EDIT PROFILE</a>
+    {% if user.is_authenticated %}
+     {% if user.profile == profile %}
+      <!-- Edit button -->
+      <div class="circle--page--header circle--fluid">
+        <div class="circle--fluid--cell circle--fluid--secondary">
+          <a class="button icon-on-left" href="{% url 'teams:profile_edit' %}">EDIT PROFILE</a>
+        </div>
       </div>
-    </div>
+      {% endif %}
+    {% endif %}
     <!-- User information -->
     <div class="circle--article--body">
       <p>{{ profile.bio }}</p>

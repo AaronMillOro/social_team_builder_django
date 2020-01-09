@@ -15,7 +15,7 @@
       <br>
       <h4 class="circle--article--section">Project</h4>
       <h1 class="circle--article--title">{{ project.title }}</h1>
-      <p class="circle--article--byline">Project Owner: <a>{{ project.creator }}</a></p>
+      <p class="circle--article--byline">Project Owner: <a href="{% url 'teams:creator_profile' pk=project.creator.pk %}">{{ project.creator }}</a></p>
       <br><br>
       <p class="circle--article--body">{{ project.description }}</p>
     </div>
@@ -48,10 +48,14 @@
         <p>{{ position.description }}</p>
         {% if position.available != 0 %}
           {% if user.is_authenticated %}
+            <form method="POST" action="">
+            {% csrf_token %}
             {% if user.profile != project.creator %}
             <!-- Creator cannot apply for a position that was created by her/himself -->
-              <a class="button button-primary">Apply</a>
+              <input type='hidden' value='{{ position.id }}' name='position_id'>
+              <input type="submit" class="button button-primary" value="Apply">
             {% endif %}
+            </form>
           {% else %}
             <a>Log in to apply</a>
           {% endif %}

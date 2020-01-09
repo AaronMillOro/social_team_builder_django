@@ -15,6 +15,8 @@ urlpatterns = [
     url(r'^sign_out/$', views.sign_out, name='sign_out'),
     # Profile
     url(r'^profile/$', views.profile, name='profile'),
+    url(r'^creator_profile/(?P<pk>\d+)/$', views.creator_profile,
+        name='creator_profile'),
     url(r'^profile_edit/$', views.profile_edit, name='profile_edit'),
     url(r'^add_skill/$', views.add_skills, name='add_skills'),
     # Project
@@ -27,7 +29,6 @@ urlpatterns = [
         name='project_delete'),
     # Applications
     url(r'^applications/$', views.applications, name='applications'),
-
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

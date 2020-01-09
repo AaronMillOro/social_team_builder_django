@@ -41,7 +41,7 @@ def sign_in(request):
                 if user.is_active:
                     login(request, user)
                     return HttpResponseRedirect(
-                        reverse('teams:profile'))
+                        reverse('index'))
                 else:
                     messages.error(
                         request, "That user account has been disabled.")
@@ -58,6 +58,11 @@ def sign_out(request):
 
 
 # ---- Profile logic -------
+def creator_profile(request, pk):
+    profile = get_object_or_404(models.Profile, pk=pk)
+    return render(request, 'profile.html', {'profile': profile})
+
+
 @login_required
 def profile(request):
     if request.method == 'GET':
@@ -168,8 +173,21 @@ def project_details(request, pk):
     project = get_object_or_404(models.Project, pk=pk)
     positions = models.Position.objects.filter(
         project=project.id).order_by('name')
-    return render(request, 'project_details.html',
-        {'project':project, 'positions':positions, }
+    # logic to apply for an available position
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            position_id = request.POST.get('position_id')
+            position = get_object_or_404(models.Position, pk=position_id)
+            profile = request.user.profile
+            application = models.Application(project=project,
+                position=position, candidate=profile
+            )
+            application.save(force_insert=True)
+            messages.success(request, 'Your application was sent')
+            return HttpResponseRedirect(reverse('teams:applications'))
+    return render(request, 'project_details.html', {
+        'project':project, 'positions':positions,
+        }
     )
 
 
