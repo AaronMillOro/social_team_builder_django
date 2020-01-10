@@ -5,10 +5,9 @@
 <div class="bounds circle--page">
 
   <div  class="circle--fluid--cell circle--fluid--primary">
-    <h2>Applications</h2>
+    <h2>Applications to my projects</h2>
   </div>
-
-  <!-- Table with projects and positions -->
+  <!-- Table with projects and applications to positions -->
   <div class="grid-75 grid-push-5">
     <table class="circle--table u-full-width">
       <thead>
@@ -19,13 +18,48 @@
         </tr>
       </thead>
     <tbody>
-      <tr class="clickable-row" data-href="project.html">
-        <td><h3>Invoice Delivery Tool</h3></td>
-        <td class="circle--cell--right align-center">
-          <span class="secondary-label">Rails Developer</span>
+      {% for application in applications %}
+      <tr class="row" data-href="project.html">
+        <td><h3><a href="{% url 'teams:creator_profile' pk=application.candidate.pk %}">
+          {{ application.candidate  }} <h3></a><br><h4>{{ application.position }}</h4>
         </td>
-        <td class="circle--cell--right align-right">Check status<td>
+        <td class="circle--cell--right align-center">
+          <span class="secondary-label">{{ application.project }}</span>
+        </td>
+        <td class="circle--cell--right align-right">{{ application.position.available }}<td>
       </tr>
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+
+  <div class="grid-100">
+    <a><br><br><br></a>
+  </div>
+
+  <div class="grid-100 circle--fluid--cell circle--fluid--primary">
+    <h2>Notifications of my applications</h2><br>
+  </div>
+  <!-- Table with notifications -->
+  <div class="grid-75 grid-push-5">
+    <table class="circle--table u-full-width">
+      <thead>
+        <tr>
+          <th>Position</th>
+          <th class="circle--cell--right align-center">Project</th>
+          <th class="circle--cell--right align-right">Status</th>
+        </tr>
+      </thead>
+    <tbody>
+      {% for candidatures in my_candidatures %}
+      <tr class="row" data-href="project.html">
+        <td><h4>{{ candidatures.position }}</h4></td>
+        <td class="circle--cell--right align-center">
+          <span class="secondary-label">{{ candidatures.project }}</span>
+        </td>
+        <td class="circle--cell--right align-right">{{ candidatures.status }}<td>
+      </tr>
+      {% endfor %}
     </tbody>
     </table>
   </div>

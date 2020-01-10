@@ -208,10 +208,18 @@ def project_delete(request, pk):
 # ---- Applications logic ----
 @login_required
 def applications(request):
-    if request.method == 'GET':
-        #applications = request.applications
-        #positions = request.positions
-        applications = models.Project.objects.all()
+    """
+    View that gestionates applications to user projects and
+    the applications made by the user
+    """
+
+    my_candidatures = models.Application.objects.filter(
+        candidate_id=request.user.profile
+    )
+    applications = models.Application.objects.filter(
+        project_id__creator=request.user.profile
+    )
     return render(
-        request, 'applications.html', {'applications': applications}
+        request, 'applications.html', {'applications': applications,
+        'my_candidatures':my_candidatures}
     )

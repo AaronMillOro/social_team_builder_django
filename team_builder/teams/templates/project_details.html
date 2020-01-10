@@ -57,7 +57,7 @@
             {% endif %}
             </form>
           {% else %}
-            <a>Log in to apply</a>
+            <a href="{% url 'teams:sign_in' %}">Log in to apply</a>
           {% endif %}
         {% else %}
           <a class="button button-primary button-inactive">Position Filled</a>
