@@ -99,3 +99,15 @@ fields=('name', 'description', 'related_skill'),
 extra=0,
 min_num=1,
 )
+
+
+class ApplicationForm(forms.ModelForm):
+    """The creator of a Project can select the candidate that applied"""
+    status = forms.ChoiceField(choices=[('Accepted','Accepted'),
+        ('Rejected', 'Rejected')],
+        label='',
+    )
+
+    class Meta:
+        model = models.Application
+        fields = ('status',)

@@ -13,21 +13,27 @@
       <thead>
         <tr>
           <th>Candidate</th>
-          <th class="circle--cell--right align-center">Project</th>
-          <th class="circle--cell--right align-right">Status</th>
+          <th class="circle--cell--right align-center">Decision</th>
         </tr>
       </thead>
     <tbody>
       {% for application in applications %}
-      <tr class="row" data-href="project.html">
-        <td><h3><a href="{% url 'teams:creator_profile' pk=application.candidate.pk %}">
-          {{ application.candidate  }} <h3></a><br><h4>{{ application.position }}</h4>
-        </td>
-        <td class="circle--cell--right align-center">
-          <span class="secondary-label">{{ application.project }}</span>
-        </td>
-        <td class="circle--cell--right align-right">{{ application.position.available }}<td>
-      </tr>
+        {% if application.position.available %}
+          {% if application.status == 'Waiting response' %}
+          <tr class="row" data-href="project.html">
+            <td>
+              <h3>
+                <a href="{% url 'teams:creator_profile' pk=application.candidate.pk %}">
+                {{ application.candidate  }}
+                </a>
+              </h3><br>
+              for: <span class="secondary-label">{{ application.position }}</span><br>
+              Project: <span class="secondary-label">{{ application.project }}</span>
+            </td>
+            <td><a class="button" href="{% url 'teams:application_decision' pk=application.pk %}">SELECT</a></td>
+          </tr>
+          {% endif %}
+        {% endif %}
       {% endfor %}
     </tbody>
     </table>
@@ -36,28 +42,69 @@
   <div class="grid-100">
     <a><br><br><br></a>
   </div>
-
-  <div class="grid-100 circle--fluid--cell circle--fluid--primary">
-    <h2>Notifications of my applications</h2><br>
+<!-- Table only for people that User accepted -->
+  <div  class="grid-100 circle--fluid--cell circle--fluid--primary">
+    <h2>Filled positions for my projects</h2><br>
   </div>
-  <!-- Table with notifications -->
   <div class="grid-75 grid-push-5">
     <table class="circle--table u-full-width">
       <thead>
         <tr>
-          <th>Position</th>
+          <th>Candidate</th>
+          <th class="circle--cell--right align-center">Decision</th>
+        </tr>
+      </thead>
+    <tbody>
+      {% for application in applications %}
+        {% if application.status == 'Accepted' %}
+            <tr class="row" data-href="project.html">
+              <td>
+                <h3>
+                  <a href="{% url 'teams:creator_profile' pk=application.candidate.pk %}">
+                  {{ application.candidate  }}
+                  </a>
+                </h3><br>
+                for: <span class="secondary-label">{{ application.position }}</span><br>
+                Project: <span class="secondary-label">{{ application.project }}</span>
+              </td>
+              <td><h3 class='positive'>{{ application.status }}</h3></td>
+            </tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+    </table>
+  </div>
+  <div class="grid-100">
+    <a><br><br><br></a>
+  </div>
+
+  <div class="grid-100 circle--fluid--cell circle--fluid--primary">
+    <h2>Notifications</h2><br>
+  </div>
+  <!-- Table with notifications either Accepted/Rejected/Waiting response-->
+  <div class="grid-75 grid-push-5">
+    <table class="circle--table u-full-width">
+      <thead>
+        <tr>
+          <th>Application</th>
           <th class="circle--cell--right align-center">Project</th>
           <th class="circle--cell--right align-right">Status</th>
         </tr>
       </thead>
     <tbody>
-      {% for candidatures in my_candidatures %}
+      {% for candidature in my_candidatures %}
       <tr class="row" data-href="project.html">
-        <td><h4>{{ candidatures.position }}</h4></td>
+        <td><h4>{{ candidature.position }}</h4></td>
         <td class="circle--cell--right align-center">
-          <span class="secondary-label">{{ candidatures.project }}</span>
+          <span class="secondary-label">{{ candidature.project }}</span>
         </td>
-        <td class="circle--cell--right align-right">{{ candidatures.status }}<td>
+        {% if candidature.status == 'Accepted' %}
+          <td class="circle--cell--right align-right"><h3 class='positive'>{{ candidature.status }}</h3><td>
+        {% elif candidature.status == 'Rejected' %}
+          <td class="circle--cell--right align-right"><h3 class='negative'>{{ candidature.status }}</h3><td>
+        {% else %}
+          <td class="circle--cell--right align-right">{{ candidature.status }}<td>
+        {% endif %}
       </tr>
       {% endfor %}
     </tbody>

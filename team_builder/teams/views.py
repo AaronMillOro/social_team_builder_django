@@ -196,6 +196,7 @@ def project_delete(request, pk):
     """Ask user to delete a previously created project"""
     project = get_object_or_404(models.Project, pk=pk)
     if request.method == 'POST':
+        models.Application.objects.filter(project=project.id).delete()
         models.Position.objects.filter(project=project.id).delete()
         models.Project.objects.filter(id=pk).delete()
         messages.success(request, 'Project was deleted T_T ')
@@ -212,7 +213,6 @@ def applications(request):
     View that gestionates applications to user projects and
     the applications made by the user
     """
-
     my_candidatures = models.Application.objects.filter(
         candidate_id=request.user.profile
     )
@@ -220,6 +220,41 @@ def applications(request):
         project_id__creator=request.user.profile
     )
     return render(
-        request, 'applications.html', {'applications': applications,
-        'my_candidatures':my_candidatures}
+        request, 'applications.html', {
+        'applications': applications, 'my_candidatures':my_candidatures,
+        }
+    )
+
+
+@login_required
+def application_decision(request, pk):
+    """ User takes the decision of a given application """
+    application = get_object_or_404(models.Application, pk=pk)
+    profile = get_object_or_404(models.Profile, pk=application.candidate.id)
+    application_form = forms.ApplicationForm(instance=application)
+    if request.method == 'POST':
+        application_form = forms.ApplicationForm(
+            request.POST, instance=application
+        )
+        if application_form.is_valid():
+            application_form.save() # save decision
+            application = get_object_or_404(models.Application, pk=pk)
+            if application.status == 'Accepted':
+                # The position will not be longer available
+                position = models.Position.objects.get(
+                    pk=application.position.id
+                )
+                position.available = False
+                position.save()
+                # The other candidates will be rejected by default
+                applications = models.Application.objects.filter(
+                    position=position).exclude(candidate=application.candidate
+                )
+                applications.update(status='Rejected')
+            messages.success(request, 'Decision made! A notification was sent')
+            return HttpResponseRedirect(reverse('teams:applications'))
+    return render(request, 'application_decision.html', {
+        'application': application, 'application_form':application_form,
+        'profile':profile,
+        }
     )

@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div class="bounds circle--page">
+  <div class="grid-70">
+    <h1>Application of {{ application.candidate }}</h1>
+    <div class="circle--article--body">
+      <p>To the Project: <b><a>{{ application.project }}</a></b><p>
+      <p>For the position: <b><a>{{ application.position }}</a></b></p>
+   </div>
+   <div class="circle--article--body">
+     <h2>Candidate skills</h2>
+       <ul class="unloaded">
+           {% for skill in application.candidate.skills.all|dictsort:"skill_name" %}
+           <li><h4>* {{ skill }}</h4></li>
+           {% endfor %}
+       </ul>
+   </div>
+  </div>
+  <div class="grid-25 grid-push-5">
+   <div class="circle--secondary--module">
+     {% if profile.avatar != '' %}
+      <img  src="{{ profile.avatar.url }}" width="200" height="230">
+     {% else %}
+      <p>Profile pic</p>
+      {% endif %}
+    </div>
+    <form method='POST' action=''>
+    {% csrf_token %}
+      <a class="circle--cell--right align-right">{{ application_form.as_p }}<a>
+      <input type="submit" class="button " href="{% url 'teams:applications' %}" value="CONFIRM">
+    </form>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

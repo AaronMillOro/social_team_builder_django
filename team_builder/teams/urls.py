@@ -29,6 +29,8 @@ urlpatterns = [
         name='project_delete'),
     # Applications
     url(r'^applications/$', views.applications, name='applications'),
+    url(r'^application_decision/(?P<pk>\d+)/$', views.application_decision,
+        name='application_decision'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

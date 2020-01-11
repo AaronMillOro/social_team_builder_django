@@ -56,5 +56,7 @@ class Application(models.Model):
     project = models.ForeignKey('Project', on_delete=models.CASCADE)
     candidate = models.ForeignKey('Profile', on_delete=models.CASCADE)
     position = models.ForeignKey('Position', on_delete=models.CASCADE)
-    status = models.CharField(default='w', max_length=2,
-        choices=[('a','Accepted'), ('r', 'Rejected'), ('w', 'Waiting')])
+    status = models.CharField(default='Waiting response', max_length=18)
+
+    def __str__(self):
+        return self.status
