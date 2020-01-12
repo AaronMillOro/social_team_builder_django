@@ -19,8 +19,9 @@ urlpatterns = [
         name='creator_profile'),
     url(r'^profile_edit/$', views.profile_edit, name='profile_edit'),
     url(r'^add_skill/$', views.add_skills, name='add_skills'),
-    # Project
+    # Projects
     url(r'^projects/$', views.my_projects, name='my_projects'),
+    url(r'^projects_search/$', views.projects_search, name='projects_search'),
     url(r'^projects_create/$', views.create_project,
         name='create_project'),
     url(r'^project_details/(?P<pk>\d+)/$', views.project_details,

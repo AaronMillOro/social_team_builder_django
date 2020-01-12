@@ -1,0 +1,68 @@
+{% extends "layout.html" %}
+{% load static %}
+
+{% block content %}
+<div class="bounds circle--page">
+
+  <div  class="grid-100 circle--fluid--cell circle--fluid--primary">
+    <h2>Projects with search term</h2>
+  </div>
+  <div class="grid-40">
+    <p></p>
+  </div>
+<!-- Add project button -->
+  {% if user.is_authenticated %}
+  <div class="grid-55 circle--fluid--cell circle--fluid--secondary">
+    <a class="button button-primary icon-on-left" href="{% url 'teams:create_project' %}"}>
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 13 13" style="enable-background:new 0 0 13 13;" xml:space="preserve" class="add">
+        <polygon points="7,6 7,0 6,0 6,6 0,6 0,7 6,7 6,13 7,13 7,7 13,7 13,6 "/>
+      </svg>
+      New Project
+    </a>
+  </div>
+  {% endif %}
+  <div  class="grid-100 circle--fluid--cell circle--fluid--primary">
+    <p></p> <br>
+  </div>
+<!-- Display available positions -->
+  <div class="grid-30">
+    <h3>Positions in projects</h3>
+    <ol>
+      {% for position in positions %}
+      <li> {{ position.name }} </li>
+      {% endfor %}
+    </ol>
+  </div>
+<!-- Table with projects and positions -->
+  <div class="grid-60 grid-push-5">
+    <table class="circle--table u-full-width">
+      <thead>
+        <tr>
+          <th>Project Title</th>
+          <th class="circle--cell--right align-right">Project Needs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in projects_query %}
+        <tr>
+          <td class="clickable-row">
+            <a href="{% url 'teams:project_details' pk=project.id %}">
+            <h3>{{ project.title }}</h3>
+            </a>
+          </td>
+          <td class="circle--cell--right align-right">
+            {% for position in positions %}
+              <ul>
+              {% if position.project_id == project.id %}
+                <li><span class="secondary-label">{{ position.name }}</span></li>
+              </ul>
+              {% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth import (authenticate, login, logout,
                                  update_session_auth_hash)
@@ -206,6 +207,19 @@ def project_delete(request, pk):
     )
 
 
+def projects_search(request):
+    """Get the projects from a query search (term)"""
+    term = request.GET.get('query')
+    projects_query = models.Project.objects.only(
+        'title','description').order_by('title').filter(
+        Q(title__icontains=term)|Q(description__icontains=term))
+    positions = models.Position.objects.only('project','name').order_by(
+        'name').filter(Q(project__in=projects_query))
+    return render(request,'projects_search.html', {
+        'projects_query': projects_query, 'positions': positions, 
+    })
+
+
 # ---- Applications logic ----
 @login_required
 def applications(request):
@@ -214,11 +228,9 @@ def applications(request):
     the applications made by the user
     """
     my_candidatures = models.Application.objects.filter(
-        candidate_id=request.user.profile
-    )
+        candidate_id=request.user.profile).order_by('position')
     applications = models.Application.objects.filter(
-        project_id__creator=request.user.profile
-    )
+        project_id__creator=request.user.profile).order_by('position')
     return render(
         request, 'applications.html', {
         'applications': applications, 'my_candidatures':my_candidatures,
