@@ -216,7 +216,25 @@ def projects_search(request):
     positions = models.Position.objects.only('project','name').order_by(
         'name').filter(Q(project__in=projects_query))
     return render(request,'projects_search.html', {
-        'projects_query': projects_query, 'positions': positions, 
+        'projects_query': projects_query, 'positions': positions,
+    })
+
+
+def projects_skill(request, skill):
+    """Get the projects with a selected skill"""
+    skill_name = models.Skill.objects.get(pk=skill)
+    positions = models.Position.objects.only('related_skill',
+        'name').order_by('name').filter(Q(related_skill_id=skill))
+
+    projects_query = models.Position.objects.values_list(
+        'project_id', flat=True).filter(
+        Q(related_skill_id=skill)).distinct()
+    projects_query = models.Project.objects.filter(
+        id__in=projects_query).order_by('title')
+
+    return render(request,'projects_skill.html', {
+        'projects_query': projects_query,
+        'positions': positions, 'skill_name': skill_name,
     })
 
 
