@@ -1,10 +1,9 @@
-#from django.urls import path
+# from django.urls import path
 from django.conf import settings
 from django.conf.urls import url
 from django.contrib.staticfiles.urls import static
 
 from . import views
-import re
 
 app_name = 'teams'
 

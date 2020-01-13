@@ -1,14 +1,12 @@
 from django.db import transaction
 from django.db.models import Q
 from django.contrib import messages
-from django.contrib.auth import (authenticate, login, logout,
-                                 update_session_auth_hash)
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 
 from . import models
 from . import forms
@@ -115,7 +113,7 @@ def profile_edit(request):
         messages.error(request, 'Check the form data!')
     return render(
         request, 'profile_edit.html', {
-            'profile_form': profile_form, 'skills_form': skills_form,}
+            'profile_form': profile_form, 'skills_form': skills_form, }
     )
 
 
@@ -130,10 +128,10 @@ def add_skills(request):
             return redirect('teams:add_skills')
     else:
         skills = models.Skill.objects.all()
-        skills = skills.extra(order_by = ['skill_name'])
+        skills = skills.extra(order_by=['skill_name'])
         new_skill_form = forms.NewSkillForm()
     return render(request, 'add_skills.html', {
-        'skills': skills, 'new_skill_form': new_skill_form,}
+        'skills': skills, 'new_skill_form': new_skill_form, }
     )
 
 
@@ -165,16 +163,19 @@ def create_project(request):
             form_b = forms.ProjectFormPartB(request.POST)
             formset = forms.PositionFormSet(request.POST)
             if form_a.is_valid() and form_b.is_valid():
-                project = form_b.save(commit=False) #fills timeline and needs
+                # fills timeline and needs
+                project = form_b.save(commit=False)
                 project.creator = models.Profile.objects.get(
                     pk=request.user.id
                 )
                 project.title = form_a.cleaned_data['title']
                 project.description = form_a.cleaned_data['description']
                 if formset.is_valid():
-                    project.save() # save project instance
+                    # save project instance
+                    project.save()
                     for position in formset:
-                        if position.cleaned_data != {}: #No empty instances
+                        # No empty instances
+                        if position.cleaned_data != {}:
                             position = position.save(commit=False)
                             position.project = project
                             position.save()
@@ -183,7 +184,7 @@ def create_project(request):
     except ValueError:
         messages.error(request, 'Check the form data!')
     return render(request, 'project_create.html', {
-        'form_a': form_a, 'form_b': form_b, 'formset': formset,}
+        'form_a': form_a, 'form_b': form_b, 'formset': formset, }
     )
 
 
@@ -198,15 +199,14 @@ def project_details(request, pk):
             position_id = request.POST.get('position_id')
             position = get_object_or_404(models.Position, pk=position_id)
             profile = request.user.profile
-            application = models.Application(project=project,
-                position=position, candidate=profile
+            application = models.Application(
+                project=project, position=position, candidate=profile
             )
             application.save(force_insert=True)
             messages.success(request, 'Your application was sent')
             return HttpResponseRedirect(reverse('teams:applications'))
     return render(request, 'project_details.html', {
-        'project':project, 'positions':positions,
-        }
+        'project': project, 'positions': positions, }
     )
 
 
@@ -220,54 +220,48 @@ def project_delete(request, pk):
         models.Project.objects.filter(id=pk).delete()
         messages.success(request, 'Project was deleted T_T ')
         return HttpResponseRedirect(reverse('teams:my_projects'))
-    return render(request, 'project_delete.html',
-        {'project': project, }
-    )
+    return render(request, 'project_delete.html', {'project': project, })
 
 
 def project_finish(request, pk):
     """Ask user to set a project as finished"""
     project = get_object_or_404(models.Project, pk=pk)
     if request.method == 'POST':
-        #project = models.Project.objects.get(pk=pk)
         project.finished = True
         project.save()
         messages.success(request, 'Project was finished!')
         return HttpResponseRedirect(reverse('teams:my_projects'))
-    return render(request, 'project_finish.html',
-        {'project': project, }
-    )
+    return render(request, 'project_finish.html', {'project': project, })
 
 
 def projects_search(request):
     """Get the projects from a query search (term)"""
     term = request.GET.get('query')
     projects_query = models.Project.objects.only(
-        'title','description').order_by('title').filter(
-        Q(title__icontains=term)|Q(description__icontains=term))
-    positions = models.Position.objects.only('project','name').order_by(
+        'title', 'description').order_by('title').filter(
+        Q(title__icontains=term) | Q(description__icontains=term))
+    positions = models.Position.objects.only('project', 'name').order_by(
         'name').filter(Q(project__in=projects_query))
-    return render(request,'projects_search.html', {
-        'projects_query': projects_query, 'positions': positions,
-    })
+    return render(request, 'projects_search.html', {
+        'projects_query': projects_query, 'positions': positions, }
+    )
 
 
 def projects_skill(request, skill):
     """Get the projects with a selected skill"""
     skill_name = models.Skill.objects.get(pk=skill)
-    positions = models.Position.objects.only('related_skill',
-        'name').order_by('name').filter(Q(related_skill_id=skill))
-
+    positions = models.Position.objects.only(
+        'related_skill', 'name').order_by('name').filter(
+        Q(related_skill_id=skill))
     projects_query = models.Position.objects.values_list(
         'project_id', flat=True).filter(
         Q(related_skill_id=skill)).distinct()
     projects_query = models.Project.objects.filter(
         id__in=projects_query).order_by('title')
-
-    return render(request,'projects_skill.html', {
+    return render(request, 'projects_skill.html', {
         'projects_query': projects_query,
-        'positions': positions, 'skill_name': skill_name,
-    })
+        'positions': positions, 'skill_name': skill_name, }
+    )
 
 
 # ---- Applications logic ----
@@ -281,10 +275,8 @@ def applications(request):
         candidate_id=request.user.profile).order_by('position')
     applications = models.Application.objects.filter(
         project_id__creator=request.user.profile).order_by('position')
-    return render(
-        request, 'applications.html', {
-        'applications': applications, 'my_candidatures':my_candidatures,
-        }
+    return render(request, 'applications.html', {
+        'applications': applications, 'my_candidatures': my_candidatures, }
     )
 
 
@@ -299,7 +291,8 @@ def application_decision(request, pk):
             request.POST, instance=application
         )
         if application_form.is_valid():
-            application_form.save() # save decision
+            # save decision
+            application_form.save()
             application = get_object_or_404(models.Application, pk=pk)
             if application.status == 'Accepted':
                 # The position will not be longer available
@@ -310,13 +303,11 @@ def application_decision(request, pk):
                 position.save()
                 # The other candidates will be rejected by default
                 applications = models.Application.objects.filter(
-                    position=position).exclude(candidate=application.candidate
-                )
+                    position=position).exclude(candidate=application.candidate)
                 applications.update(status='Rejected')
             messages.success(request, 'Decision made! A notification was sent')
             return HttpResponseRedirect(reverse('teams:applications'))
     return render(request, 'application_decision.html', {
-        'application': application, 'application_form':application_form,
-        'profile':profile,
-        }
+        'application': application, 'application_form': application_form,
+        'profile': profile, }
     )
