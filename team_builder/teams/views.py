@@ -61,16 +61,36 @@ def sign_out(request):
 # ---- Profile logic -------
 def creator_profile(request, pk):
     profile = get_object_or_404(models.Profile, pk=pk)
-    return render(request, 'profile.html', {'profile': profile})
+    positions = models.Position.objects.filter(
+        project_id__creator=profile.id).order_by('name')
+    old_projects = models.Project.objects.only(
+        'creator', 'finished').filter(
+        creator=profile.id, finished=True).order_by('title')
+    current_projects = models.Project.objects.only(
+        'creator', 'finished').filter(
+        creator=profile.id, finished=False).order_by('title')
+    return render(request, 'profile.html', {
+        'profile': profile, 'old_projects': old_projects,
+        'positions': positions, 'current_projects': current_projects}
+    )
 
 
 @login_required
 def profile(request):
     if request.method == 'GET':
-        #applications = request.applications
-        #positions = request.positions
         profile = request.user.profile
-    return render(request, 'profile.html', {'profile': profile})
+        positions = models.Position.objects.filter(
+            project_id__creator=request.user.id).order_by('name')
+        old_projects = models.Project.objects.only(
+            'creator', 'finished').filter(
+            creator=request.user.id, finished=True).order_by('title')
+        current_projects = models.Project.objects.only(
+            'creator', 'finished').filter(
+            creator=request.user.id, finished=False).order_by('title')
+    return render(request, 'profile.html', {
+        'profile': profile, 'old_projects': old_projects,
+        'positions': positions, 'current_projects': current_projects}
+    )
 
 
 @login_required

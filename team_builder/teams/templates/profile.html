@@ -39,49 +39,52 @@
         </ul>
     </div>
   </div>
-
-</div>
-{% endblock %}
-
-<!--
-<div class="circle--secondary--module">
-  <h4>My Projects</h4>
-    <ul class="circle--link--list">
-      <li><a>Project 1</a></li>
-      <li><a>Project 2</a></li>
-      <li><a>Project 3</a></li>
-      <li><a>Project 4</a></li>
-    </ul>
+  <!-- Past Projects -->
+  <div class="grid-70">
+    <h2>Past Projects</h2>
+    <table class="circle--table u-full-width">
+      <thead>
+        <tr>
+          <th>Project Title</th>
+          <th class="circle--cell--right align-right">Project Needs</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for project in old_projects %}
+        <tr>
+          <td class="clickable-row">
+            <a href="{% url 'teams:project_details' pk=project.id %}">
+            <h3>{{ project.title }}</h3>
+            </a>
+          </td>
+          <td class="circle--cell--right align-right">
+            {% for position in positions %}
+              <ul>
+              {% if position.project_id == project.id %}
+                <li><span class="secondary-label">{{ position.name }}</span></li>
+              </ul>
+              {% endif %}
+            {% endfor %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <!-- Current projects -->
+  <div class="grid-25 grid-push-5">
+    <div class="circle--secondary--module">
+      <h4>Current Projects</h4>
+        <ul class="circle--link--list">
+          {% for proj in current_projects %}
+          <li><b>
+            <a href="{% url 'teams:project_details' pk=proj.id %}">
+            {{ proj.title }}
+            </a></b>
+          </li>
+          {% endfor %}
+        </ul>
+    </div>
   </div>
 </div>
-
-
-<h2>Past Projects</h2>
-  <table class="u-full-width circle--table">
-    <thead>
-      <tr>
-        <th>Project Title</th>
-        <th class="circle--cell--right">Project Needs</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr class="clickable-row" data-href="project.html">
-        <td>
-          <h3>Invoice Delivery Tool</h3>
-        </td>
-        <td class="circle--cell--right">
-          <span class="secondary-label">Rails Developer</span>
-        </td>
-      </tr>
-      <tr class="clickable-row" data-href="project.html">
-        <td>
-          <h3>Twitter Client</h3>
-        </td>
-        <td class="circle--cell--right">
-          <span class="secondary-label">Designer</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-
--->
+{% endblock %}
