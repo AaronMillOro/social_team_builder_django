@@ -144,7 +144,6 @@ def create_project(request):
             form_a = forms.ProjectFormPartA(request.POST)
             form_b = forms.ProjectFormPartB(request.POST)
             formset = forms.PositionFormSet(request.POST)
-
             if form_a.is_valid() and form_b.is_valid():
                 project = form_b.save(commit=False) #fills timeline and needs
                 project.creator = models.Profile.objects.get(
@@ -152,7 +151,6 @@ def create_project(request):
                 )
                 project.title = form_a.cleaned_data['title']
                 project.description = form_a.cleaned_data['description']
-
                 if formset.is_valid():
                     project.save() # save project instance
                     for position in formset:
@@ -203,6 +201,20 @@ def project_delete(request, pk):
         messages.success(request, 'Project was deleted T_T ')
         return HttpResponseRedirect(reverse('teams:my_projects'))
     return render(request, 'project_delete.html',
+        {'project': project, }
+    )
+
+
+def project_finish(request, pk):
+    """Ask user to set a project as finished"""
+    project = get_object_or_404(models.Project, pk=pk)
+    if request.method == 'POST':
+        #project = models.Project.objects.get(pk=pk)
+        project.finished = True
+        project.save()
+        messages.success(request, 'Project was finished!')
+        return HttpResponseRedirect(reverse('teams:my_projects'))
+    return render(request, 'project_finish.html',
         {'project': project, }
     )
 

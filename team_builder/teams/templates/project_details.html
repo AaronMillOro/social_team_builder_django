@@ -4,9 +4,12 @@
 {% block content %}
 <div class="bounds circle--page">
   {% if user.is_authenticated %}
-   {% if user.profile == project.creator %}
+    {% if user.profile == project.creator %}
       <div class="grid-100">
         <a class="button button-primary" href="{% url 'teams:project_delete' pk=project.id %}">Delete Project</a>
+        {% if not project.finished %}
+        <a class="button icon-on-left" href="{% url 'teams:project_finish' pk=project.id %}">Finish Project</a>
+        {% endif %}
       </div>
     {% endif %}
   {% endif %}
