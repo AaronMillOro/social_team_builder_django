@@ -5,7 +5,7 @@ from django.dispatch import receiver
 
 
 class Skill(models.Model):
-    skill_name = models.CharField(max_length=20, blank=True)
+    skill_name = models.CharField(max_length=20, blank=False)
 
     def __str__(self):
         return self.skill_name

@@ -8,7 +8,8 @@ def index(request):
             finished=False).order_by('title')
         positions = models.Position.objects.filter(
             project__in=projects).order_by('name')
-        related_skills = models.Position.objects.all().values_list(
+        related_skills = models.Position.objects.filter(
+            project__in=projects).values_list(
             'related_skill_id', flat=True).distinct()
         related_skills = models.Skill.objects.filter(
             id__in=related_skills).order_by('skill_name')
