@@ -1,66 +1,75 @@
 from django.contrib.auth.models import User
+from django.db.models import Q
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.test import Client, TestCase
 from django.urls import reverse
 
-from .forms import (ApplicationForm, NewSkillForm, PositionForm,
+from .forms import (ApplicationForm, NewSkillForm, PositionFormSet,
                     ProjectFormPartA, ProjectFormPartB, ProfileForm,
                     SkillsForm)
-from .models import Application, Position, Project, Profile, Skill
+from .models import (Application, Position, Project, Profile, Skill,
+                     create_user_profile)
 from . import views
 
 
-class SkillTest(TestCase):
+class ViewsTest(TestCase):
     def setUp(self):
         self.client = Client()
+        user = User.objects.create_user(
+            username='David', password='nitaLA2019'
+        )
+        self.client.login(username='David', password='nitaLA2019')
         skill_1 = Skill.objects.create(skill_name='CSS')
         skill_2 = Skill.objects.create(skill_name='Python')
-        skill_3 = Skill.objects.create(skill_name='Java')
-        self.user = User.objects.create_user(
-            username='Juan', password='juanitaLA2019'
-        )
+
+        @receiver(post_save, sender=user)
+        def create_user_profile(sender, instance, created, **kwargs):
+            if created:
+                Profile.objects.create(user=instance)
 
     def test_add_skill(self):
-        """
-        Checks that
-        i) user is authenticated
-        ii) the correct html template is used
-        iii) all the skills from the database are listed
-        iv) the validity of the form to add a new skill
-        """
-        self.client.login(username='juan', password='juanitaLA2019')
         skills = Skill.objects.all()
-        response = self.client.get(reverse('teams:add_skills'), kwargs={skills})
+        response = self.client.get(reverse('teams:add_skills'))
         form = SkillsForm(data={'skill_name': 'GOlang'})
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(form.is_valid())
+        self.assertTemplateUsed(response, 'add_skills.html', 'layout.html')
+        self.assertEqual(2, len(skills))
+
+    def test_create_profile_form(self):
+        data = {'fullname': 'David Moyes', 'bio': 'bla bla bla',
+            'avatar': 'image.png'
+        }
+        form = ProfileForm(data=data)
+        response = self.client.post(reverse('teams:profile_edit'), data)
         self.assertTrue(form.is_valid())
         self.assertEqual(response.status_code, 302)
-        #self.assertTemplateUsed(response, 'add_skills.html')
-        self.assertEqual(3, len(skills))
 
-
-"""
-class ProfileTest(TestCase):
-    def setUp(self):
-        self.client = Client()
-        self.user1 = User.objects.create_user(
-            username='David', password='juanitaLA2019'
-        )
-        skill_1 = Skill.objects.create(skill_name='Java')
-        skill_2 = Skill.objects.create(skill_name='HTML')
-        skills = Skill.objects.all()
-        profile_1 = Profile.objects.create(
-            user=self.user1, fullname='David Moyes',
-            bio='A description of the user'
-        )
-
-    def test_edit_profile(self):
-        self.client.login(username='David', password='juanitaLA2019')
-        profile_1 = Profile.objects.get(fullname='David Moyes')
-        response = self.client.get(reverse('teams:profile_edit'), {
-            'profile': profile_1}
-        )
+    def test_profile_view(self):
+        # set profile data to display on view
+        profile = Profile.objects.last()
+        profile.fullname = 'David Moyes'
+        profile.bio = 'bla bla bla'
+        profile.avatar = 'image.png'
+        profile.save()
+        response = self.client.get(reverse('teams:profile'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.fullname, 'David Moyes')
+        self.assertTemplateUsed(response, 'profile.html', 'layout.html')
+        self.assertEqual(profile.fullname, 'David Moyes')
 
-    def tearDown(self):
-        super(ProfileTest, self).tearDown()
-"""
+    def test_project_create(self):
+        profile = Profile.objects.last()
+        data_a = {'title': 'New project', 'description': 'Project descript'}
+        form_a = ProjectFormPartA(data=data_a)
+        data_b = {
+            'timeline': 'Approximate timming',
+            'requirements': 'Requirements of project',
+        }
+        form_b = ProjectFormPartB(data=data_b)
+        skill_1 = Skill.objects.create(skill_name='CSS')
+        response = self.client.get(reverse('teams:create_project'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'project_create.html', 'layout.html')
+        self.assertTrue(form_a.is_valid())
+        self.assertTrue(form_b.is_valid())
