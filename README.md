@@ -27,7 +27,11 @@ Users should be able to find a project and ask to join it. If you're a project o
 * The user can search for projects based on words in their titles or descriptions (use of querysets).
 * The user can filter projects by the positions they need filled.
 * The user can **apply for a position** in another project.
+* Unit test coverage is accesible by typing:
+	
+		coverage report
 
+![Figure display](https://github.com/AaronMillOro/social_team_builder_django/blob/master/team_builder/media/images/social_team.png)
 
 ## Code of commits
 
